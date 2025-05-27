@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+  <!-- Prostě Head obsahující systémové věci -->
+  <head>
+    <title>Oskar</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css"/>
+    <script src="script.js"></script>
+  </head>
+
+  <!-- Tělo stránky, přes class připraveno na prolnutí mezi stránkami -->
+  <body class="body-fade">
+
+    <!-- Nav Bar, v němž se technicky vzato nachází i socials oddělení stránky -->
+    <div class="nav-bar" id="nav-bar">
+
+      <!-- Polygon nav baru. Díky tomu to potom může při zvětšení mít ten konkrétní tvar -->
+      <div class="nav-bar-polygon">
+
+        <div class="nav-bar-button">N A V</div>
+        <div class="nav-bar-items">
+
+          <!-- Zvýraňovací elementy (asi budu po zbytek komentářů používat pojem "Highlights") -->
+          <div class="nav-bar-highlight nav-bar-highlight-left"></div>
+          <div class="nav-bar-highlight nav-bar-highlight-right"></div>
+
+          <!-- Self explanatory -->
+          <div class="nav-bar-item" id="navbar_item_1">Home</div>
+          <div class="nav-bar-item" id="navbar_item_2">About</div>
+          <div class="nav-bar-item" id="navbar_item_3">My Work</div>
+          <div class="nav-bar-item" id="navbar_item_4">Contact</div>
+        </div>
+      </div>
+
+        <!-- Socials oddělení, součást nav baru -->
+      <div class="socials-div display-none">
+        <div class="socials">
+
+          <!-- Jedna síť -->
+          <a class="social-div">
+            <img
+              class="social-logo"
+              src="images/logos/logo_instagram.png"
+              alt="Instagram"
+            />
+            <div class="social-text">
+              lorem
+            </div>
+          </a>
+
+          <a class="social-div">
+            <img
+              class="social-logo"
+              src="images/logos/logo_github.png"
+              alt="Github"
+            />
+            <div class="social-text">
+              ipsum
+            </div>
+          </a>
+          <a class="social-div">
+            <img
+              class="social-logo"
+              src="images/logos/logo_linkedin.png"
+              alt="LinkedIn"
+            />
+            <div class="social-text">
+              i psům
+            </div>
+          </a>
+          <a class="social-div">
+            <img
+              class="social-logo"
+              src="images/logos/logo_gmail.png"
+              alt="Gmail"
+            />
+            <div class="social-text">
+              lore
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Zafixovaný div přes celou stránku. Zatím bez využití, ale nápady jsou -->
+    <div class="fixed-div">
+      <div class="fixed-square"></div>
+    </div>
+
+    <!-- Hero page, celé to je spojené do jednoho svg. Díky tomu ty abstraktní svg čáry navazují vždy stejně -->
+    <div class="hero-page" id="home">
+      <svg width="100vw" height="100vh" viewbox="0 0 2000 1000">
+
+        <polyline
+          class="svg-stroke hero-stroke-1"
+          points="-1000,170 300,170 320,192 370,192 390,170 639,170 692,341"
+        ></polyline>
+        <polyline
+          class="svg-stroke hero-stroke-2"
+          points="3000,800 1340,800 1125,490"
+        ></polyline>
+        <polyline
+          class="svg-stroke hero-stroke-3"
+          points="1236,398 1236,310 1280,280 1280,-4000"
+        ></polyline>
+
+        <!-- Rozpísmenkované, pro případné animace -->
+        <text id="oskarTitle" class="hero-page-title" font-size="237">
+          <tspan x="250" y="500" class="letter">O</tspan>
+          <tspan x="400" y="500" class="letter">S</tspan>
+          <tspan x="560" y="500" class="letter k">K</tspan>
+          <tspan x="748" y="500" class="letter">A</tspan>
+          <tspan x="910" y="500" class="letter">R</tspan>
+          <tspan x="1132" y="500" class="letter">K</tspan>
+          <tspan x="1291" y="500" class="letter">O</tspan>
+          <tspan x="1450" y="500" class="letter">P</tspan>
+          <tspan x="1600" y="500" class="letter">Č</tspan>
+          <tspan x="1715" y="500" class="letter">I</tspan>
+          <tspan x="1800" y="500" class="letter">L</tspan>
+        </text>
+      </svg>
+    </div>
+
+    <!-- About page, kde se dá překlikávat mezi kategoriemi.-->
+    <div class="about-page" id="about">
+      <div class="about-left">
+        <div class="title about-title" id="about">About</div>
+
+        <!-- Čudlíky na překlikávání mezi kategoriemi. Main čudlík jenom textově zobrazuje aktuální sekci -->
+        <div id="about-buttons" class="about-buttons">
+          <div id="about-nav-left" class="about-nav"></div>
+          <div id="button-me" class="about-button"></div>
+          <div id="about-nav-right" class="about-nav"></div>
+        </div>
+      </div>
+
+      <!-- About content divs, zdrojové obrázky a texty jsou nadefinované přes js -->
+      <div class="about-right">
+        <div class="about-text-wrapper">
+
+          <!-- A a B verze existují kvůli plynulým animacím (více v css a js) -->
+          <div class="about-text active" id="about-text-a"></div>
+          <div class="about-text" id="about-text-b"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gallery page -->
+    <div class="gallery-page" id="gallery">
+      <div class="gallery-array">
+        <div
+          class="gallery-item gallery-title-item"
+        >
+          <div class="title gallery-title">My Work</div>
+        </div>
+
+        <!-- Objekty rozděleny do kategori ("tall", "wide", devault) podle image ratio. Jsou podle toho v gridu stylizovány -->
+        <div class="gallery-item tall" data-url="projects/flower_photo.html">
+          <div class="gallery-item-inner">
+            <img
+              class="gallery-item-image"
+              src="images/gallery/Project_Flower.jpg"
+            />
+          </div>
+        </div>
+
+        <div class="gallery-item wide" data-url="projects/twd_web.html">
+          <div class="gallery-item-inner">
+            <img class="gallery-item-image" src="images/gallery/Project_TWD.png" />
+          </div>
+        </div>
+        <div class="gallery-item" data-url="projects/pole_photo.html">
+          <div class="gallery-item-inner">
+            <img class="gallery-item-image" src="images/gallery/Project_Pole.JPG" />
+          </div>
+        </div>
+
+        <div class="gallery-item" data-url="projects/project_aw_eu.html">
+          <div class="gallery-item-inner">
+            <img class="gallery-item-image" src="images/gallery/Project_AW.jpg" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kontakt formulář -->
+    <div class="contact-page" id="contact">
+      <div class="contact-left">
+        <div class="contact-title title">Contact Me</div>
+        <!-- Čudlík pro odeslání. V mobilní verzi se tento nezobrazuje -->
+        <button class="send-button normal send-button-1">Send</button>
+      </div>
+      <!-- Text inputy pro zadání zprávy a mailu -->
+      <div class="contact-right">
+        <div class="email-div">
+          <input
+            type="email"
+            id="emaill"
+            name="email"
+            placeholder="Your email..."
+            class="contact-email"
+          />
+
+          <!-- Svg čára. Zobrazuje se jenom v 16:9 web ratio. Jinak tomu suplementuje border email inputu -->
+          <svg
+            viewBox="0 0 1000 200"
+            class="email-line"
+            width="100%"
+            height="100%"
+          >
+            <polyline
+              class="svg-stroke"
+              points="0,130 0,200 800,200 1000,0"
+              id="email-stroke"
+            ></polyline>
+          </svg>
+
+        </div>
+        <div class="contact-message-wrapper">
+          <textarea
+            data-expandable
+            id="contact-message"
+            name="message"
+            placeholder="Type your message here..."
+            class="contact-message"
+          ></textarea>
+        </div>
+      </div>
+      <!-- Čudlík pro odeslání. V mobilní verzi se tento zobrazuje -->
+      <button class="send-button normal send-button-2">Send</button>
+    </div>
+
+    <!-- Footer, po kliknutí kdekoliv na něj se zvětší navbar a zobrazí socials -->
+    <div class="footer">
+
+      <!-- SVG, které dodává footeru tvar, který navazuje na expanded nav bar. Součástí je i pár dalších design elementů -->
+      <svg
+        class="footer-svg"
+        width="100vw"
+        height="25vh"
+        viewBox="0 0 8000 1000"
+        preserveAspectRatio="none"
+      >
+        <polyline
+          class="svg-filled"
+          points="0,0 0,1000 8000,1000 8000,0 5690,410 4600,0 2440,410 1700,0"
+        />
+        <polyline
+          class="svg-filled footer-stripe"
+          points="5400,2000 6000,2000 4100,0 3500,0"
+        ></polyline>
+        <polyline
+          class="svg-stroke-inverse footer-stroke"
+          points="5745,390 -14000,5000"
+        ></polyline>
+        <polyline
+          class="svg-stroke-inverse footer-stroke"
+          points="2500,390 -200,1000"
+        ></polyline>
+      </svg>
+
+      <!-- Texty, aby uživatele napadlo co a jak. -->
+      <div class="footer-text footer-text-1">Socials?</div>
+      <div class="footer-text footer-text-2">Where?</div>
+
+      <!-- Iluze buttonu. Akce se triggerne kdekoliv na footeru, nejenom na buttonu. -->
+      <div class="footer-button">Here!</div>
+    </div>
+    
+
+
+  </body>
+</html>
