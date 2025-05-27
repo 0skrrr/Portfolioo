@@ -45,10 +45,11 @@ function getDeviceType() {
     { ratio: 3.56, label: "32:9" },      
   ];
 
-  const closest = knownRatios.reduce((prev, curr) => {
-    return Math.abs(curr.ratio - aspectRatio) < Math.abs(prev.ratio - aspectRatio) ? curr : prev;
+  // Získání nejbližšího poměru stran z předdefinovaného seznamu za pomocí jednoduchého porovnání rozdílů
+  const closest = knownRatios.reduce((first, second) => {
+    return Math.abs(second.ratio - aspectRatio) < Math.abs(first.ratio - aspectRatio) ? second : first;
   });
-
+  console.warn("Aspect Ratio:", aspectRatio, "Closest Match:", closest.label);
   return {
     ratio: aspectRatio,
     closestMatch: closest.label,
