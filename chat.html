@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Grained Example</title>
+  <style>
+    #grain-layer {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: red;
+      z-index: -1;
+    }
+  </style>
+
+  <!-- Load Grained library first -->
+  <script src="https://cdn.jsdelivr.net/npm/grained@0.0.2/grained.min.js"></script>
+</head>
+<body>
+  <div id="grain-layer"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      grained('#grain-layer', {
+        animate: true,
+        patternWidth: 100,
+        patternHeight: 100,
+        grainOpacity: 0.05,
+        grainDensity: 1,
+        grainWidth: 10,
+        grainHeight: 10
+      });
+    });
+  </script>
+</body>
+</html>

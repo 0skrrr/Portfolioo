@@ -1,0 +1,156 @@
+.project-popup {
+  height: auto;
+  width: 100vw;
+  display: flex;
+  flex-flow: column ;
+  justify-content: flex-start;
+  align-items: center;
+}
+.project-title {
+  height: 90vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+.project-title-background {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: url("../images/gallery/Project_Flower.jpg") center/cover no-repeat;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.project-title-content {
+  background: var(--color-background);
+  color: var(--color-on-background);
+  font-family: title;
+  position: relative;
+  overflow: visible;
+  z-index:2;
+  width: 100vw;
+  height: 20vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 4vh;
+}
+
+.ptc2 {
+  display:none;
+}
+
+.project-popup-content {
+  height: auto;
+  width: 100vw;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: space-evenly;
+  align-items: center;
+  gap:10vh;
+  margin: 20vh 0 50vh 0;
+}
+.project-popup-content-text {
+  width: 60vw;
+  height: 20vh;
+  font-family: normal;
+  font-size: 3vh;
+  color: var(--color-on-background);
+}
+.project-popup-content-download {
+  width: 30vh;
+  height: 10vh;
+  background: var(--color-on-background);
+  color: var(--color-background);
+  font-family: normal;
+  font-size: 4vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  clip-path: polygon(0% 0%, 85% 0%, 100% 40%, 100% 100%, 15% 100%, 0% 60%);
+  position: relative;
+  transition: ease-in-out 0.2s;
+}
+.project-popup-content-download:hover {
+  cursor: pointer;
+  clip-path: polygon(0 0, 70% 0, 100% 30%, 100% 100%, 30% 100%, 0 75%);
+}
+.gallery-item::before,
+.gallery-item::after{
+  display:none;
+}
+
+@media (orientation: landscape) {
+  .project-title {
+    width:40vw;
+  }
+  .project-title-background {
+    width:100%;
+  }
+  .project-title-content {
+    height: 14vh;
+    width: auto;
+    font-size: 10vh;
+  }
+  .project-popup {
+    align-items: flex-start;
+    flex-flow:row nowrap;
+    margin: 0 0 40vh 0;
+  }
+  .project-popup-content {
+    width:60vw;
+    height: 90vh;
+    margin: 0 0 0 0;
+  }
+  .project-popup-content-text {
+    width: 50%;
+    text-align: center;
+  }
+  .ptc1 {
+    display:none;
+  }
+  .ptc2 {
+    display:flex;
+  }
+  .gallery-item::before,
+  .gallery-item::after{
+    display:flex;
+  }
+}
+
+.b .project-title-background {
+  background: url("../images/gallery/Project_Pole.JPG") center/cover no-repeat;
+}
+
+.c .project-title-background {
+  background: url("../images/gallery/Project_TWD.png") center/cover no-repeat;
+}
+.d .project-title-background {
+  background: url("../images/gallery/Project_AW.jpg") center/cover no-repeat;
+}
+
+
+.d .project-popup-content-download {
+  width: 40vw;
+  height: 50%;
+  background: none;
+  color: none;
+  font-family: normal;
+  font-size: 4vh;
+  flex-flow: row wrap;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  clip-path: none;
+  position: relative;
+  transition: ease-in-out 0.2s;
+}
+.d .project-popup-content {
+  gap:3vh;
+}
