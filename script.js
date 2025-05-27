@@ -2,23 +2,29 @@
 
 // Tohle vezme tu část URL, která nás zajímá (např. "index.html")
 const currentPage = window.location.pathname.split("/").pop();
+console.log("Current page: " + currentPage);
 
 // Proměná pro sledování stavu u sociálních sítí.
 let navBarSocialsExpanded = false;
 
 // Jednoduché funkce na převod jednotek. Nakonec jsem je nepoužil tak moc, jak jsem očekával
 function pxToVw(px) {
+  // console.log("pxToVw called with px:", px);
   return (px / window.innerWidth) * 100;
 }
 function pxToVh(px) {
+  // console.log("pxToVh called with px:", px);
   return (px / window.innerHeight) * 100;
 }
 function vhToPx(vh) {
+  // console.log("vhToPx called with vh:", vh);
   return (vh / 100) * window.innerHeight;
 }
 
+
 // Funkce pro získání typu zařízení na základě poměru stran obrazovky
 function getDeviceType() {
+  // console.log("getDeviceType called");
   
   const width = window.innerWidth;
   const height = window.innerHeight;
@@ -28,34 +34,37 @@ function getDeviceType() {
 
   // Možná trošku extensivní seznam poměrů stran. Nakonec jich tolik nebylo potřeba, ale už nechci měnit ten kod.
   const knownRatios = [
-    { ratio: 0.56, label: "9:16" },      
-    { ratio: 0.60, label: "3:5" },       
-    { ratio: 0.67, label: "2:3" },       
-    
-    { ratio: 1.00, label: "1:1" },       
-    { ratio: 1.33, label: "4:3" },       
-    { ratio: 1.50, label: "3:2" },       
-    { ratio: 1.60, label: "16:10" },     
-    { ratio: 1.67, label: "5:3" },        
-    { ratio: 1.78, label: "16:9" },      
-    { ratio: 2.00, label: "18:9" },      
-    { ratio: 2.17, label: "19.5:9" },   
-    { ratio: 2.22, label: "20:9" },      
-    { ratio: 2.33, label: "21:9" },      
-    { ratio: 3.56, label: "32:9" },      
+    { ratio: 0.56, label: "9:16", index: 1 },      
+    { ratio: 0.60, label: "3:5", index: 2 },       
+    { ratio: 0.67, label: "2:3", index: 3 },       
+    { ratio: 1.00, label: "1:1", index: 4 },       
+    { ratio: 1.33, label: "4:3", index: 5 },       
+    { ratio: 1.50, label: "3:2", index: 6 },
+    { ratio: 1.60, label: "16:10", index: 7 },     
+    { ratio: 1.67, label: "5:3", index: 8 },        
+    { ratio: 1.78, label: "16:9", index: 9 },      
+    { ratio: 2.00, label: "18:9", index: 10 },      
+    { ratio: 2.17, label: "19.5:9", index: 11 },   
+    { ratio: 2.22, label: "20:9", index: 12 },      
+    { ratio: 2.33, label: "21:9", index: 13 },      
+    { ratio: 3.56, label: "32:9", index: 14 },      
   ];
 
   // Získání nejbližšího poměru stran z předdefinovaného seznamu za pomocí jednoduchého porovnání rozdílů
   const closest = knownRatios.reduce((first, second) => {
     return Math.abs(second.ratio - aspectRatio) < Math.abs(first.ratio - aspectRatio) ? second : first;
   });
-  console.warn("Aspect Ratio:", aspectRatio, "Closest Match:", closest.label);
+
   return {
     ratio: aspectRatio,
     closestMatch: closest.label,
+    index: closest.index,
   };
 }
-const deviceType = getDeviceType()
+
+
+
+
 const deviceList = {
     "4:3": 5, "3:2": 6, "5:3": 8, "16:10": 7, "16:9": 9,
     "18:9": 10, "19.5:9": 11, "20:9": 12, "21:9": 13, "32:9": 14,
@@ -63,11 +72,53 @@ const deviceList = {
 };
 
 
+function emailLineExpand() {
+  // console.log("emailLineExpand called");
+  const line = document.getElementById("email-stroke");
+  const trigger = document.getElementById("emaill");
+  var length = line.getTotalLength();
+  // console.log("Contact line length: " + length);
+  trigger.addEventListener("focus", function () {
+    line.animate([{ strokeDashoffset: 0 }], {
+      duration: 200,
+      easing: "ease-in-out",
+      fill: "forwards",
+    });
+  });
 
-function getScrollSections() {
+  trigger.addEventListener("blur", function () {
+    line.animate([{ strokeDashoffset: -70 }], {
+      duration: 200,
+      easing: "ease-in-out",
+      fill: "forwards",
+    });
+  });
+}
+
+function bodyFadeOut() {
+  // console.log("bodyFadeOut called");
+  window.addEventListener("DOMContentLoaded", () => {
+    document.body.classList.remove("body-fade");
+
+    document.querySelectorAll(".gallery-item").forEach((el) => {
+      el.addEventListener("click", () => {
+        const targetUrl = el.getAttribute("data-url");
+        if (!targetUrl) return;
+
+        document.body.classList.add("body-fade");
+
+        setTimeout(() => {
+          window.location.href = targetUrl;
+        }, 300);
+      });
+    });
+  });
+}
+
+function getScrollSections(deviceRatio) {
+  // console.log("getScrollSections called");
   const sectionIds = ["home", "about", "gallery", "contact"];
   const navItems = document.querySelectorAll(".nav-bar-item");
-  const { closestMatch } = getDeviceType();
 
   const offsetMap = {
     "4:3": 200,
@@ -81,13 +132,13 @@ function getScrollSections() {
     "21:9": 50,
     "32:9": 10,
     "1:1": 100,
-    "3:5": 1600,      // check
-    "2:3": 1800,      // check
-    "9:16": 1600,     // check
+    "3:5": 1600,     
+    "2:3": 1800,     
+    "9:16": 1600,     
   };
 
 
-  const offset = offsetMap[closestMatch] ?? 90;
+  const offset = offsetMap[deviceRatio] ?? 90;
 
   return sectionIds.map((id, index) => {
     const element = document.getElementById(id);
@@ -103,6 +154,7 @@ function getScrollSections() {
 
 
 function getCurrentSection(scrollSections) {
+  // console.log("getCurrentSection called");
   const scrollY = window.scrollY;
   let current = scrollSections[scrollSections.length - 1];
 
@@ -122,11 +174,12 @@ function moveHighlightToElement(
   highlightBottomRight,
   withPadding = false
 ) {
+  // console.log("moveHighlightToElement called with element:", element)
   const rect = element.getBoundingClientRect();
   const container = document.querySelector(".nav-bar-items");
 
   if (!container) {
-    console.warn("Missing .nav-bar-items container!");
+    console.error("Missing .nav-bar-items container!");
     return;
   }
 
@@ -153,7 +206,6 @@ function moveHighlightToElement(
 
 
   const offset = vhToPx(withPadding ? (offsetMap[closestMatch] ?? 3) : 0);
-  console.log("closestMatch", closestMatch);
   //alert("closestmatch" + closestMatch);
 
   const leftPx = rect.left - containerRect.left - offset;
@@ -177,12 +229,13 @@ function moveHighlightToElement(
 
 
 
-function setupNavbar() {
+function setupNavbar(deviceRatio) {
+  // console.log("setupNavbar called;
   const items = document.querySelectorAll(".nav-bar-item");
   const highlightTopLeft = document.querySelector(".nav-bar-highlight-left");
   const highlightBottomRight = document.querySelector(".nav-bar-highlight-right");
 
-  let scrollSections = getScrollSections(); 
+  let scrollSections = getScrollSections(deviceRatio); 
   let isHovering = false;
   let hoverTimeout;
   let scrollTimeout;
@@ -193,7 +246,6 @@ function setupNavbar() {
 
   function updateHighlightToCurrentSection() {
     if (!lockHighlight) {
-      // If on gallery page, always highlight gallery section
       if (isGalleryPage) {
         moveHighlightToElement(items[2], highlightTopLeft, highlightBottomRight);
         return;
@@ -205,7 +257,6 @@ function setupNavbar() {
     }
   }
 
-  // Hover and click handlers
   items.forEach((item, index) => {
     item.addEventListener("mouseenter", () => {
       isHovering = true;
@@ -224,7 +275,7 @@ function setupNavbar() {
           moveHighlightToElement(items[2], highlightTopLeft, highlightBottomRight);
         } else {
           requestAnimationFrame(() => {
-            scrollSections = getScrollSections();
+            scrollSections = getScrollSections(deviceRatio);
             const currentSection = getCurrentSection(scrollSections);
             const navItem = currentSection?.navItem;
 
@@ -275,7 +326,7 @@ function setupNavbar() {
   });
 
   window.addEventListener("resize", () => {
-    scrollSections = getScrollSections();
+    scrollSections = getScrollSections(deviceRatio);
     requestAnimationFrame(() => {
       updateHighlightToCurrentSection();
     });
@@ -283,7 +334,7 @@ function setupNavbar() {
 
   window.addEventListener("load", () => {
     requestAnimationFrame(() => {
-      scrollSections = getScrollSections();
+      scrollSections = getScrollSections(deviceRatio);
       updateHighlightToCurrentSection();
     });
   });
@@ -291,6 +342,7 @@ function setupNavbar() {
 
 
 function aboutTransform(config) {
+  // console.log("aboutTransform called")
   const {
     textElementIds,
     buttonElementId,
@@ -413,27 +465,11 @@ function aboutTransform(config) {
   if (rightNav) rightNav.onclick = () => showContent("right");
 }
 
-function bodyFadeOut() {
-  window.addEventListener("DOMContentLoaded", () => {
-    document.body.classList.remove("body-fade");
 
-    document.querySelectorAll(".gallery-item").forEach((el) => {
-      el.addEventListener("click", () => {
-        const targetUrl = el.getAttribute("data-url");
-        if (!targetUrl) return;
-
-        document.body.classList.add("body-fade");
-
-        setTimeout(() => {
-          window.location.href = targetUrl;
-        }, 300);
-      });
-    });
-  });
-}
 
 /* dnes */
 function scrollPosition() {
+  // console.log("scrollPosition called");
   if (currentPage === "index.html") {
     window.addEventListener("load", function () {
       const match = document.cookie.match(/(?:^|; )scrollY=([^;]+)/);
@@ -454,29 +490,11 @@ function scrollPosition() {
   }
 }
 
-function emailLineExpand() {
-  const line = document.getElementById("email-stroke");
-  const trigger = document.getElementById("emaill");
-  var length = line.getTotalLength();
-  console.log("Line length:", length);
-  trigger.addEventListener("focus", function () {
-    line.animate([{ strokeDashoffset: 0 }], {
-      duration: 200,
-      easing: "ease-in-out",
-      fill: "forwards",
-    });
-  });
-  trigger.addEventListener("blur", function () {
-    line.animate([{ strokeDashoffset: -70 }], {
-      duration: 200,
-      easing: "ease-in-out",
-      fill: "forwards",
-    });
-  });
-}
 
 
-function setupHoverExpansion() {
+
+function setupHoverExpansion(deviceRatio) {
+  // console.log("setupHoverExpansion called");
   const ontrigger = document.querySelector('.footer');
   const navBar = document.querySelector('.nav-bar');
   const socialsDiv = document.querySelector('.socials-div');
@@ -497,10 +515,11 @@ function setupHoverExpansion() {
   let isLocked = false;
 
   if (!ontrigger || !navBar || !socialsDiv || !contactPage) {
-    console.warn('Required elements not found for setupHoverExpansion');
+    console.error('Required elements not found for setupHoverExpansion');
   }
   
   function openSocials() {
+    // console.log("openSocials called");
     if (device < 5) {
       navButton.style.display = 'none';
     }
@@ -516,6 +535,7 @@ function setupHoverExpansion() {
   }
 
   function closeSocials() {
+    // console.log("closeSocials called");
     if (device < 5) {
       navButton.style.display = 'flex';
     }
@@ -535,6 +555,7 @@ function setupHoverExpansion() {
 }
 
 function mobileNavbarExpand() {
+  // console.log("mobileNavbarExpand called");
   const navbar = document.getElementById("nav-bar");
   const polygon = document.querySelector(".nav-bar-polygon");
   const items = document.querySelectorAll(".nav-bar-items");
@@ -574,6 +595,7 @@ function mobileNavbarExpand() {
 
 
 function enableGalleryCornerAnimation() {
+  // console.log("enableGalleryCornerAnimation called");
   const items = document.querySelectorAll('.gallery-item');
 
   items.forEach(item => {
@@ -591,33 +613,50 @@ function enableGalleryCornerAnimation() {
 
 
 
-
+// Po načtení stránky se spustí postupně všechny tyhle funkce
 document.addEventListener("DOMContentLoaded", function () {
-  const { closestMatch } = getDeviceType();
-  console.log("Current page: " + currentPage);
-  console.log(deviceType);
-  scrollPosition();
+  const deviceType = getDeviceType();
+  console.log("aspectRatio " + deviceType.ratio + " (" + deviceType.closestMatch + ")" + " index: " + deviceType.index);
+
   bodyFadeOut();
-  setupNavbar();
-  setupHoverExpansion();
-  mobileNavbarExpand();
+  if (deviceType.closestMatch === "16:9") {
+    emailLineExpand();
+  }
+
+  scrollPosition();
+  
+  setupNavbar(deviceType.closestMatch);
+  setupHoverExpansion(deviceType.closestMatch);
+  mobileNavbarExpand(deviceType.closestMatch);
+
+
   if (currentPage === "index.html") {
     enableGalleryCornerAnimation();
-    const device = deviceList[closestMatch] ?? 4;
-    if (device === 9) {
-      console.warn("giga")
-      emailLineExpand();
-      
-    }
+
+    
+
     aboutTransform({
-      textElementIds: ["about-text-a", "about-text-b"],
+      textElementIds: [
+        "about-text-a",
+        "about-text-b"
+      ],
       buttonElementId: "button-me",
       leftNavId: "about-nav-left",
       rightNavId: "about-nav-right",
-      texts: ["    <div class=about-text-a>Oskrrr - Just a guy</div><img class=about-image-a src=images/about/about_me.JPG>",
-        "Workk", "Hobbies", "School"],
-      buttons: ["Me", "My Work", "My Hobbies", "My School"]
+      texts:[
+        "<div class=about-text-a>Oskrrr - Just a guy</div><img class=about-image-a src=images/about/about_me.JPG>",
+        "Workk",
+        "Hobbies",
+        "School"
+      ],
+      buttons: [
+        "Me",
+        "My Work",
+        "My Hobbies",
+        "My School"
+      ]
     });
   }
-  console.warn(document.querySelector(".hero-stroke-3").getTotalLength())
+
+
 });
