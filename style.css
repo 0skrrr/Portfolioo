@@ -1,0 +1,1395 @@
+/* Root proměnné. */
+:root {
+  --color-primary: rgb(231 29 40);
+  --color-background: rgb(19 19 19);
+  --color-on-primary: #ececec;
+  --color-on-background: #ececec;
+  --color-background-secondary: rgb(6 6 6);
+
+  /* Root proměnná pro šířku všech možných elementů čar */
+  --stroke-width: 0.3vh;
+}
+
+/* Fonty a textové presety */
+@font-face {
+  font-family: hero;
+  src: url(fonts/Saira_Stencil_One/SairaStencilOne-Regular.ttf);
+}
+@font-face {
+  font-family: title;
+  src: url(fonts/Russo_One/RussoOne-Regular.ttf);
+}
+@font-face {
+  font-family: normal;
+  src: url(fonts/Lato/Lato-Regular.ttf);
+}
+.title {
+  font-family: title;
+  color: var(--color-on-background);
+  font-size: 10vh;
+  width: auto;
+  display: flex;
+  flex-flow: row wrap;
+}
+.hero-page-title {
+  font-family: hero;
+  fill: var(--color-on-background);
+  text-align: center;
+  text-anchor: middle;
+}
+
+
+
+/* Vyresetování všeho */
+* {
+  margin: 0;
+  padding: 0;
+  mix-blend-mode: normal;
+  backdrop-filter: none;
+  text-decoration: none;
+  shape-rendering: auto;
+}
+*::selection {
+  background: var(--color-primary);
+  color: var(--color-background);
+}
+svg {
+  overflow: hidden;
+}
+
+
+/* Univerzální třídy. Použito "!important", aby to mělo absolutní prioritu */
+.display-none {
+  display: none !important;
+}
+.overflow-hidden {
+  overflow: hidden !important;
+}
+.pointer-events-none {
+  pointer-events: none !important;
+}
+
+
+/* Tělo webu, se třídou pro přepnutí mezi stránkami */
+body {
+  width: 100vw;
+  height: auto;
+  background-color: var(--color-background);
+  overflow-x: hidden;
+  overflow-y: visible;
+  position: relative;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+  z-index: 0;
+}
+body.body-fade {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+/* Presety pro SVG všude po webu */
+.svg-stroke {
+  fill: none;
+  stroke: var(--color-on-background);
+  stroke-width: var(--stroke-width);
+}
+.svg-stroke-inverse {
+  fill: none;
+  stroke: var(--color-background);
+  stroke-width: var(--stroke-width);
+}
+.svg-filled {
+  fill: var(--color-on-background);
+  stroke: none;
+}
+.svg-filled-inverse {
+  fill: var(--color-background);
+}
+
+/* Úprava vertikálního scrollbaru. Účel je, aby to vypadalo, že se jakoby něco načítá */
+::-webkit-scrollbar {
+  width: 0.5vw;
+  position: absolute;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+::-webkit-scrollbar-track-piece:start {
+  background: var(--color-on-background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-on-background);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+  cursor: grab;
+}
+::-webkit-scrollbar-thumb:active {
+  cursor: grabbing;
+}
+
+/* Stylizace nav baru */
+.nav-bar {
+  height: 10vh;
+  width: 100vw;
+  position: sticky;
+  top: 0;
+  backdrop-filter: blur(2px) grayscale(1) invert(1);
+  z-index: 4;
+  transition: 0.2s all slow-in-out;
+}
+.nav-bar-polygon {
+  width: 100vw;
+  height: 10vh;
+
+  /* Vytvoření tvaru pro pozdější úpravu */
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  background-color: var(--color-on-primary);
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 3vw;
+  transition: 0.2s all slow-in-out;
+}
+.nav-bar-button {
+  display:none;
+  width:100vw;
+  height:100%;
+  justify-self:center;
+  align-self: center;
+  font-size: 4vh;
+  font-family: hero;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+.nav-bar-items {
+  width: 50vw;
+  height: 10vh;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 3vw;
+  margin: 0 5vw 0 0;
+  position: relative;
+}
+.nav-bar-item {
+  height: 6vh;
+  width: 8vw;
+  font: 3vh normal;
+  color: var(--color-background);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: ease-in-out 0.3s;
+  
+  /* Tvar navbar itemu. Nejde vidět. Je menší než polygon při hover. Díky tomu to dodá dynamiku, protože to vypadá, že se ten button background zvětšuje */
+  clip-path: polygon(10% 10%, 75% 10%, 90% 50%, 90% 90%, 20% 90%, 10% 70%);
+}
+.nav-bar-item:hover {
+  cursor: pointer;
+  background: var(--color-background);
+
+  /* Zvětšená clip path, iluze zvětšení */
+  clip-path: polygon(0 0, 80% 0, 100% 40%, 100% 100%, 20% 100%, 0 65%);
+  color: var(--color-on-background);
+}
+
+/* Další 4 pravidla se týkají těch reaktivních okrajů navbar itemů. Přes JS hýbeme objekty s classou nav-bar-highlight. Na ně jsou navázané before a after elementy, které mají bordery, takže to vypadá jak to má. Teď jak to komentuju si uvědomuju že to je zbytečně složité. */
+.nav-bar-highlight {
+  position: absolute;
+  width: 0;
+  height: 0;
+  z-index: 5;
+  transition: all 0.3s ease;
+  pointer-events: none;
+  opacity: 0;
+}
+.nav-bar-highlight::before,
+.nav-bar-highlight::after {
+  content: "";
+  position: absolute;
+  width: 3vw;
+  height: 2vw;
+}
+.nav-bar-highlight-left::before {
+  left: 0;
+  top: 0;
+  border-left: var(--stroke-width) solid var(--color-background);
+  border-top: var(--stroke-width) solid var(--color-background);
+}
+.nav-bar-highlight-right:after {
+  right: 0;
+  bottom: 0;
+  border-right: var(--stroke-width) solid var(--color-background);
+  border-bottom: var(--stroke-width) solid var(--color-background);
+}
+
+  /* Zvětšená verze nav baru, kde upravuju clip path, abych vytvořil požadovaný tvar */
+  /* Fun fact: Footer a nav bar mají vzorování, které na jakékoliv velikosti do sebe bude zapadat (ať už to vypadá dobře či ne), ale používají k tomu jiné metody. Svg filled polyline, a css clip path polygon */
+.nav-bar.expanded {
+  background: var(--color-on-background);
+  clip-path: polygon(0% 0%, 0% 65%, 23% 65%, 32% 75%, 58% 65%, 72% 75%, 100% 65%, 100% 0%);
+  height: 90vh;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Sekce pro moje socials. Jedná se o část nav baru, která se zobrazí po kliknutí na footer */
+.socials-div {
+  width: 100vw;
+  display: flex;
+  justify-content:flex-end;
+  align-items: center;
+}
+.socials {
+  width: 50vw;
+  height: 44vh;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 2vh;
+}
+.social-div {
+  width: 20vw;
+  height: 10vw;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background: var(--color-on-background);
+  color: var(--color-background);
+  gap: 2vw;
+}
+.social-logo {
+  width: 5vw;
+  height: 5vw;
+  object-fit: contain;
+}
+.social-text {
+  font-family: normal;
+  font-size: 3vh;
+}
+
+/* Hero page. Celá udělaná přes SVG, díky tomu ty čáry se na ta písmena budou pokaždé napojovat správně */
+.hero-page {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Nastavení animací pro každou čáru. Definované později v kodu */
+.hero-stroke-1 {
+  animation: heroStrokeA ease-out 2s forwards;
+}
+.hero-stroke-2 {
+  animation: heroStrokeB ease-out 2s forwards;
+}
+.hero-stroke-3 {
+  animation: heroStrokeC ease-out 2s forwards;
+}
+
+/* About page. Rozděleno na sekci "right", kde je navigace a nadpisy, a "left", kde je content dotyčné kategorie */
+.about-page {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.about-left {
+  width: 30vw;
+  height: 100vh;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 3vh;
+}
+.about-title {
+  width: auto;
+  justify-content: start;
+  align-items: start;
+}
+.about-buttons {
+  width: 30vw;
+  height: 25vh;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5vw;
+}
+.about-button {
+  height: 8vh;
+  width: 12vw;
+  font: 3vh normal;
+  color: var(--color-background);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: ease-in-out 0.3s;
+
+  /* Tohle používám často, jenom trošku pozměněná čísla. Dodá estetiku čudlíku */
+  clip-path: polygon(0% 0%, 85% 0%, 100% 40%, 100% 100%, 15% 100%, 0% 60%);
+  background: var(--color-on-background);
+  cursor: pointer;
+  position: relative;
+}
+.about-button-text {
+  display: inline-block;
+  transition: transform 0.6s ease, opacity 0.6s ease;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Třídy pro plynulý přechod mezi kategoriemi */
+.about-button-text.slide-in-left {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+.about-button-text.slide-in-right {
+  transform: translateX(100%);
+  opacity: 0;
+}
+.about-button-text.active {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+/* Navigace v sekci about.
+Je to čtverec, před kterým je absolutně napozicovaný otočený obdélník, vytváří iluzi šipky.
+Takže nemusím kliknout přímo na šipku, stačí ta oblast kolem ní. */
+.about-nav {
+  position: relative;
+  height: 8vh;
+  width: 8vh;
+  background: transparent;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+.about-nav:hover {
+  transform: scale(1.2);
+}
+.about-nav::before {
+  position: absolute;
+  width: 1.4vw;
+  height: 1.4vw;
+  content: "";
+  z-index: 1;
+  pointer-events: none;
+  border-style: solid;
+  border-width: var(--stroke-width);
+  border-color: transparent;
+  transform: rotate(-45deg);
+}
+#about-nav-left::before {
+  top: 1vw;
+  left: 1vw;
+  border-top-color: var(--color-on-background);
+  border-left-color: var(--color-on-background);
+}
+#about-nav-right::before {
+  top: 1vw;
+  left: 0vw;
+  border-bottom-color: var(--color-on-background);
+  border-right-color: var(--color-on-background);
+}
+.about-right {
+  width: 50vw;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+}
+.about-text-wrapper {
+  position: relative;
+  overflow: hidden;
+  width: 50vw;
+  height: 70vh;
+}
+.about-text {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: transform 0.6s ease, opacity 0.6s ease;
+  z-index: 1;
+  color: var(--color-on-background);
+  font-size: 2.2vh;
+  font-family: normal;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 2vw;
+}
+.about-text-a {
+  width: 14vw;
+  height: 20vh;
+}
+.about-image-a {
+  object-fit: contain;
+  height: 70vh;
+  width: 30vw;
+  position: relative;
+  z-index: 1;
+}
+.about-text.active {
+  opacity: 1;
+  transform: translateX(0);
+  z-index: 1;
+}
+
+/* Sekce galerie, udělané přes grid */
+.gallery-page {
+  width: 100vw;
+  height: auto;
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
+  justify-content: start;
+}
+.gallery-array {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-auto-rows: calc((100vw - 12vw) / 5);
+  gap: 2vw;
+  width: 100vw;
+  padding: 2vw;
+  box-sizing: border-box;
+}
+.gallery-item {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.4s ease;
+  width: 100%;
+  height: 100%;
+}
+
+/* Stylizace nadpisu galerie */
+.gallery-title-item {
+  height: 100%;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  align-items: center;
+  grid-column: span 2;
+  pointer-events: none;
+}
+.gallery-title {
+  height: auto;
+  width: auto;
+  font-size: 7vh;
+}
+
+/* Možnost pro položku zabírat víc pozic na gridu, v případě fotky např. orientované na výšku */
+.gallery-item.wide {
+  grid-column: span 2;
+}
+.gallery-item.tall {
+  grid-row: span 2;
+}
+.gallery-item.big {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.gallery-item-inner {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.gallery-item-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+.gallery-item:hover .gallery-item-image {
+  transform: scale(1.3);
+  cursor: pointer;
+}
+/* Definování abstraktních rohů u každé položky galerie */
+.gallery-item::before,
+.gallery-item::after {
+  position: absolute;
+  width: 2vw;
+  height: 2vw;
+  content: "";
+  z-index: 2;
+  pointer-events: none;
+  border-style: solid;
+  border-width: var(--stroke-width);
+  border-color: transparent;
+  animation-duration: 0.6s;
+  animation-fill-mode: forwards;
+}
+/* Přidělení animací, tyhle určují animaci, která se spustí, když už nehoverujem item. Ano, počítá se i při načtení stránky. */
+.gallery-item:not(.hovering)::before {
+  animation-name: cornerBeforeExit;
+}
+.gallery-item:not(.hovering)::after {
+  animation-name: cornerAfterExit;
+}
+
+/* A tyhle určují pozici při hover */
+.gallery-item.hovering::before {
+  animation-name: cornerBeforeEnter;
+}
+.gallery-item.hovering::after {
+  animation-name: cornerAfterEnter;
+}
+
+/* Původní pozice pro ty elementy */
+.gallery-item::before {
+  top: 3vw;
+  left: 3vw;
+  border-top-color: var(--color-on-background);
+}
+.gallery-item::after {
+  bottom: 3vw;
+  right: 3vw;
+  border-bottom-color: var(--color-on-background);
+}
+
+/* Pozměnění rozměrů pro položku nadpisu */
+.gallery-item:nth-child(1)::before {
+  border-left-color: var(--color-on-background);
+  width: 8vw;
+  height: 3vw;
+}
+.gallery-item:nth-child(1)::after {
+  border-right-color: var(--color-on-background);
+  width: 8vw;
+  height: 3vw;
+}
+
+
+/* Sekce kontakt. Opět rozdělena na dvě části, levá část je pro nadpis a tlačítko, pravá část je pro formulář.*/
+.contact-page {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  z-index: 0;
+}
+.contact-left,
+.contact-right {
+  flex: 1;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 3vh;
+  height: 100vh;
+}
+.contact-right {
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 20vh 0 0 0;
+  gap: 12vh;
+}
+.contact-title {
+  color: var(--color-on-background);
+}
+.send-button {
+  width: 40vh;
+  height: 10vh;
+  font-size: 4vh;
+  font-family: normal;
+  background: var(--color-on-background);
+  color: var(--color-background);
+  /* Další použití clip-path, tentokrát pro tlačítko odeslat */
+  clip-path: polygon(0% 0%, 85% 0%, 100% 40%, 100% 100%, 15% 100%, 0% 60%);
+  border: none;
+  cursor: pointer;
+  transition: ease-in-out 0.2s;
+}
+.send-button-2{
+  display:none;
+}
+
+/* Upravení tvaru tlačítka při hover */
+.send-button:hover {
+  clip-path: polygon(0 0, 70% 0, 100% 50%, 100% 100%, 30% 100%, 0 50%);
+}
+
+.contact-right {
+  font-size: 4vh;
+  color: var(--color-on-background);
+  font-family: normal;
+}
+.contact-email,
+.contact-message {
+  width: 50vw;
+  font-size: 4vh;
+  border: none;
+  background: none;
+  color: var(--color-on-background);
+  font-family: normal;
+  box-sizing: border-box;
+  resize: none;
+}
+
+/* Stylizování placeholderů */
+.contact-email::placeholder,
+.contact-message::placeholder {
+  color: var(--color-on-background);
+}
+
+/* email-div je stylizován relativně, aby se tam dala absolutně napozicovat ta čára.
+Nefunguje dobře mimo 16/9, takže v jiných poměrech se to řeší přes border toho divu */
+.email-div {
+  position: relative;
+  height: 20vh;
+  align-self: flex-end;
+  width: 100%;
+}
+.contact-email {
+  position: absolute;
+  bottom: 2vh;
+  left: 2vw;
+  z-index: 1;
+  width: 20vw;
+}
+
+/* Upravení zobrazení při psaní. a automatického doplnění */
+.contact-email:focus {
+  outline: none;
+  border: none;
+  background: var(--color-background);
+  color: var(--color-on-background);
+}
+.contact-email:-webkit-autofill {
+  -webkit-text-fill-color: var(--color-on-background);
+  -webkit-box-shadow: 0 0 0px 1000px var(--color-background) inset;
+  font-family: normal;
+}
+
+/* Absolutně napozicovaná SVG čára */
+.email-line {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  overflow: hidden;
+  width: 100%;
+}
+/* Tohle je velmi divné řešení problému.  Házím na tu čárku pattern. Kdyby to byla normální hodnota, bude to přerušovaná čára.
+Tady ale nastavuju pattern stejně dlouhý jak délka čáry (zatím jsme furt u prvního řádku, offset nebereme v potaz). Takže to vizuálně neudělá nic.
+Jenomže já tomu potom dám záporný offset 70, a to mi ze začátku odebere část.
+Přes JS poté offset resetuju, takže se ta čára při psaní "prodlouží"*/
+.email-line polyline {
+  stroke-dasharray: 1152.8427734375;
+  transition: var(--stroke-width) 3s ease;
+  stroke-dashoffset: -70;
+}
+
+.contact-message-wrapper {
+  position: relative;
+  width: 100%;
+  height: 40vh;
+  margin-left: 2vw;
+}
+
+/* Rohy, stejný princip jak gallery */
+.contact-message-wrapper::before {
+  content: "";
+  position: absolute;
+  top: -3vh;
+  left: -3vh;
+  width: 10vw;
+  height: 4vw;
+  border-top: 2px solid var(--color-on-background);
+  border-left: 2px solid var(--color-on-background);
+  z-index: 1;
+  pointer-events: none;
+}
+.contact-message-wrapper::after {
+  content: "";
+  position: absolute;
+  bottom: -3vh;
+  right: -3vh;
+  width: 10vw;
+  height: 4vw;
+  border-bottom: 2px solid var(--color-on-background);
+  border-right: 2px solid var(--color-on-background);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.contact-message:focus {
+  outline: none;
+  border: none;
+  background: var(--color-background);
+  color: var(--color-on-background);
+}
+
+/* Footer */
+.footer {
+  position: relative;
+  height: 25vh;
+  width: 100vw;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  overflow: hidden;
+  background: var(--color-background);
+}
+
+/* Třída, kterou nastavím pro footer, když se na něj klikne. Zůstane tak do dalšího kliknutí v obraze */
+.footer-fixed {
+  position:fixed;
+  bottom:0;
+  left:0;
+  z-index: 3;
+}
+
+/* SVG, ve kterém je vytvořen vzhled footeru */
+.footer-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.footer-text {
+  margin: 0 0 0 6vw;
+  font-family: normal;
+  font-size: 3vh;
+  transform: rotate(-11deg);
+}
+.footer-text:nth-child(3) {
+  margin: 0 14vw 0 0;
+}
+.footer-button {
+  margin: 0 8vw 0 0;
+  height: 7vh;
+  width: 10vw;
+  font: 3vh normal;
+  transform: rotate(-11deg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: ease-in-out 0.3s;
+  background-color: var(--color-background);
+  color: var(--color-on-background);
+  /* Zas další použití clip-path, tentokrát pro tlačítko footeru */
+  clip-path: polygon(0% 0%, 85% 0%, 100% 40%, 100% 100%, 15% 100%, 0% 60%);
+}
+.footer-button:hover {
+  cursor: pointer;
+  /* Upravená clip-path, prostě ať se to hýbe */
+  clip-path: polygon(0 0, 70% 0, 100% 30%, 100% 100%, 30% 100%, 0 75%);
+}
+
+/* Nějaké specifikace pro svg elementy ve footeru */
+.footer-stripe {
+  fill: var(--color-background);
+}
+.footer-stroke {
+  stroke-width: 0.6vw;
+}
+
+
+
+
+/* Všechny použité animace, pěkně na jednom místě */
+
+/* Hero čáry animace. Stejný princip jako u emailové čáry, více elegantní řešení jsem nenašel. */
+@keyframes heroStrokeA {
+  0% {
+    stroke-dasharray:1837.489501953125;
+    stroke-dashoffset: 1837.489501953125;
+  }
+  100% {
+    stroke-dasharray: 1837.489501953125;
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes heroStrokeB {
+  0% {
+    stroke-dasharray:2037.2598876953125;
+    stroke-dashoffset: 2037.2598876953125;
+  }
+  100% {
+    stroke-dasharray: 2037.2598876953125;
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes heroStrokeC {
+  0% {
+    stroke-dasharray:4421.25390625;
+    stroke-dashoffset: -4421.25390625;
+  }
+  100% {
+    stroke-dasharray: 4421.25390625;
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Animace pro přechod mezi kategoriemi v sekci about. */
+@keyframes slideInLeftFadeLate {
+  0% { transform: translateX(-100%); opacity: 0; }
+  50% { transform: translateX(-50%); opacity: 0; }
+  100% { transform: translateX(0%); opacity: 1; }
+}
+
+/* Animace pro rohy v sekci galerie */
+@keyframes cornerBeforeEnter {
+  0% { 
+    left: 2vw;
+    width: 2vw;
+    height: 0;
+    border-top-color: var(--color-on-background);
+  }
+  70% {
+    width: 3vw;
+    height: 0vw;
+    border-top-color: var(--color-on-background);
+  }
+  100% {
+    left: 70%;
+    width: 4vw;
+    height: 2vw;
+    border-right-color: var(--color-on-background);
+  }
+}
+@keyframes cornerAfterEnter {
+  0% { 
+    right: 2vw;
+    width: 2vw;
+    height: 0;
+    border-bottom-color: var(--color-on-background);
+  }
+  70% {
+    width: 3vw;
+    height: 0vw;
+    border-bottom-color: var(--color-on-background);
+  }
+  100% {
+    right: 70%;
+    width: 4vw;
+    height: 2vw;
+    border-left-color: var(--color-on-background);
+  }
+}
+@keyframes cornerBeforeExit {
+  0% {
+    left: 70%;
+    width: 4vw;
+    border-top-color: var(--color-on-background);
+    border-right-color: var(--color-on-background);
+  }
+  30% {
+    border-right-color: transparent;
+  }
+  100% {
+    left: 2vw;
+    width: 2vw;
+    border-right-color: transparent;
+    border-left-color: var(--color-on-background);
+    border-top-color: var(--color-on-background); }
+}
+@keyframes cornerAfterExit {
+  0% {
+    right: 70%;
+    width: 4vw;
+    border-bottom-color: var(--color-on-background);
+    border-left-color: var(--color-on-background);
+  }
+  30% {
+    border-left-color: transparent;
+  }
+  100% {
+    right: 2vw;
+    width: 2vw;
+    border-left-color: transparent;
+    border-right-color: var(--color-on-background);
+    border-bottom-color: var(--color-on-background);
+  }
+}
+
+/* Odteď už jenom responzivita. Víc do detailů o ní bude v js a v dokumentaci.
+Zde se mi o ní nechce rozepisovat, většina je self-explanatory.	*/
+
+
+@media only screen and (max-aspect-ratio:1/1){
+
+  :root {
+    --stroke-width: 0.6vw;
+  }
+
+
+  .nav-bar-highlight:before,
+  .nav-bar-highlight:after {
+    width: 10vw;
+    height: 5vh;
+  }
+  .nav-bar-clicked {
+    height: 100vh;
+  }
+  .nav-bar-button {
+    display:flex;
+    
+  }
+  .nav-bar-items {
+    width: 100vw;
+    flex-flow: column wrap;
+    height: 100vh;
+    gap: 7vh;
+  }
+  .nav-bar-item {
+    width: 30vw;
+  }
+
+
+  .socials-div {
+    justify-content: center;
+  }
+  .socials {
+    flex-flow: row wrap;
+    width: 80vw;
+    row-gap: 1vh;
+    column-gap: 20vw;
+  }
+
+
+  .about-page {
+    flex-flow: column nowrap;
+    height: auto;
+    margin: 0 0 50vh 0;
+  }
+  .about-left {
+    height: 50vh;
+  }
+  .about-buttons {
+    width: 100vw;
+  }
+  .about-button {
+    width: 40vw;
+    height: 7vh;
+  }
+  #about-nav-left:before,
+  #about-nav-right:before {
+    width: 5vh;
+    height: 5vh;
+  }
+  #about-nav-left::before {
+    top: 1vw;
+    left: 1vw;
+  }
+  #about-nav-right::before {
+    top: 1vw;
+    left: 1vw;
+  }
+  .about-text-wrapper {
+    height: 70vh;
+    width: 70vw;
+  }
+  .about-image-a {
+    width: 70vw;
+    height: auto;
+  }
+  .about-text {
+    height: 100%;
+    width: 100%;
+    align-items: flex-start;
+  }
+
+
+  .gallery-page {
+    margin: 0 0 50vh 0;
+    height: auto;
+  }
+  .gallery-array {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10vh;
+  }
+  .gallery-title-item {
+    height: 70vh;
+  }
+  .gallery-item {
+    max-height: 70vh;
+    width: 80vw;
+  }
+  .gallery-item::before,
+  .gallery-item::after {
+    width: 30vw;
+    height: 10vw;
+    animation: none;
+    transition: none;
+  }
+  .gallery-item::before {
+    top: 6vw;
+    left: 6vw;
+    border-top-color: var(--color-on-background);
+    border-left-color: var(--color-on-background);
+  }
+  .gallery-item::after {
+    bottom: 6vw;
+    right: 6w;
+    border-bottom-color: var(--color-on-background);
+    border-right-color: var(--color-on-background);
+  }
+  .gallery-item:nth-child(1)::before {
+    border-left-color: var(--color-on-background);
+    width: 40vw;
+    height: 20vw;
+  }
+  .gallery-item:nth-child(1)::after {
+    border-right-color: var(--color-on-background);
+    width: 40vw;
+    height: 20vw;
+  }
+
+
+  .contact-page {
+    flex-flow: column nowrap;
+    height: auto;
+    margin: 0 0 30vh 0;
+    width: 100vw;
+  }
+  .contact-left {
+    text-align: center;
+    flex: 1;
+  }
+  .contact-right {
+    flex: 1.5;
+    width: 100vw;
+    padding:0 0 0 0vw;
+  }
+  .contact-title {
+    width:80vw
+  }
+  .send-button-2{
+    display:block;
+    margin: 30vh 0 0 0;
+  }
+  .send-button-1{
+    display:none;
+  }
+  .contact-email {
+    left:0;
+    bottom:0;
+    bottom: 0vh;
+    width:90vw;
+    padding: 0 0 2vw 2vw;
+    border-bottom: var(--stroke-width) solid var(--color-on-background);
+    transition: all 0.3s ease-in-out;
+    margin: 0 0 0 10vw;
+  }
+  .contact-email:focus {
+    border-bottom: var(--stroke-width) solid var(--color-on-background);
+    border-left: var(--stroke-width) solid var(--color-on-background);
+  }
+  .email-line {
+    display: none;
+  }
+  .email-div {
+    width:100%;
+  }
+  .contact-message-wrapper {
+    width: 80vw;
+    margin:0;
+    overflow: hidden;
+    padding: 5vh 5vh 5vh 10vw;
+  }
+  .contact-message-wrapper::before {
+    top: 0vh;
+    left: 0vw;
+    width: 65vw;
+    height: 0vw;
+    border-top: var(--stroke-width) solid var(--color-on-background);
+    border-left: none;
+  }
+  .contact-message-wrapper::after {
+    content: "";
+    position: absolute;
+    bottom: 0vh;
+    right:0vh;
+    width: 65vw;
+    height: 0vw;
+    border-bottom: var(--stroke-width) solid var(--color-on-background);
+    border-right: none;
+  }
+  .contact-message {
+    width: 100%;
+    height: 100%;
+  }
+
+
+  .footer {
+    position:relative;
+  }
+  .footer-text {
+    position: absolute;
+    margin: 0;
+  }
+  .footer-text-1 {
+    top:40%;
+    left:5%;
+    rotate:-27deg;
+  }
+  .footer-text-2 {
+    top:50%;
+    left:30%;
+    rotate:-27deg;
+  }
+  .footer-button {
+    position: absolute;
+    right:0;
+    top:50%;
+    width: 30vw;
+    rotate: -27deg;
+  }
+}
+
+@media only screen and (min-aspect-ratio: 1/1)  and (max-aspect-ratio: 5/3){
+  .nav-bar-button {
+    display: none;
+  }
+  .nav-bar-item {
+    width:15vw;
+  }
+  .nav-bar-items {
+    width: 100vw;
+  }
+
+  .about-page {
+    flex-flow: column nowrap;
+    height: auto;
+    margin: 0 0 50vh 0;
+  }
+  .about-left {
+    height: 50vh;
+  }
+  .about-buttons {
+    width: 100vw;
+  }
+  .about-button {
+    width: 20vw;
+    height: 7vh;
+  }
+  #about-nav-left:before,
+  #about-nav-right:before {
+    width: 5vh;
+    height: 5vh;
+  }
+  #about-nav-left::before {
+    top: 1vw;
+    left: 1vw;
+  }
+  #about-nav-right::before {
+    top: 1vw;
+    left: 1vw;
+  }
+  .about-right {
+    height: 80vh;
+  }
+  .about-text-wrapper {
+    height: 70vh;
+    width: 70vw;
+    
+  }
+  .about-text {
+    display: flex;
+    flex-flow: row wrap;
+    height: 10vh;
+    width: 100%;
+    align-items: flex-start;
+    gap: 10vw;
+  }
+
+  .about-image-a {
+    width: auto;
+    height: 50vh;
+  }
+  .about-text-a {
+    height: 50vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+
+  .gallery-array {
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: calc((100vw - 12vw) / 5);
+    gap: 2vw;
+  }
+
+
+
+  .contact-page {
+    flex-flow: column nowrap;
+    height: auto;
+    margin: 30vh 0 30vh 0;
+    width: 100vw;
+  }
+  .contact-left {
+    text-align: center;
+    flex: 1;
+  }
+  .contact-right {
+    flex: 1.5;
+    width: 100vw;
+    padding:0 0 0 0vw;
+  }
+  .contact-title {
+    width:80vw;
+    display: flex;
+    justify-content: center;
+    align-items:center;
+  }
+  .send-button-2{
+    display:block;
+    width: 40vw;
+    height: 10vw;
+    margin: 8vh 0 0 0;
+  }
+  .send-button-1{
+    display:none;
+  }
+  .contact-email {
+    left:0;
+    bottom:0;
+    bottom: 0vh;
+    width:93vw;
+    padding: 0 0 2vw 3vw;
+    border-bottom: var(--stroke-width) solid var(--color-on-background);
+    transition: all 0.3s ease-in-out;
+    margin: 0 0 0 7vw;
+  }
+  .contact-email:focus {
+    border-bottom: var(--stroke-width) solid var(--color-on-background);
+    border-left: var(--stroke-width) solid var(--color-on-background);
+  }
+  .email-line {
+    display: none;
+  }
+  .email-div {
+    width:100%;
+  }
+  .contact-message-wrapper {
+    width: 90vw;
+    margin:0;
+    overflow: hidden;
+    padding: 5vh 0vh 5vh 10vw;
+  }
+  .contact-message-wrapper::before {
+    top: 0vh;
+    left: 0vw;
+    width: 65vw;
+    height: 0vw;
+    border-top: var(--stroke-width) solid var(--color-on-background);
+    border-left: none;
+  }
+  .contact-message-wrapper::after {
+    content: "";
+    position: absolute;
+    bottom: 0vh;
+    right:0vh;
+    width: 65vw;
+    height: 0vw;
+    border-bottom: var(--stroke-width) solid var(--color-on-background);
+    border-right: none;
+  }
+  .contact-message {
+    width: 100%;
+    height: 100%;
+  }
+
+  .footer-text {
+    position: absolute;
+    margin: 0;
+  }
+  .footer-text-1 {
+    top:40%;
+    left:5%;
+    rotate:-10deg;
+  }
+  .footer-text-2 {
+    top:50%;
+    left:30%;
+    rotate:-10deg;
+  }
+  .footer-button {
+    position: absolute;
+    right:0;
+    top:50%;
+    width: 15vw;
+    rotate: -10deg;
+  }
+  .socials-div {
+  justify-content:center;
+}
+}
+
+@media only screen and (min-aspect-ratio: 5/3) and (max-aspect-ratio: 5/3) {
+  .contact-page {
+    margin: 40vh 0 30vh 0;
+  }
+}
+
+
+@media only screen and (min-aspect-ratio: 16/9) {
+  .nav-bar-item {
+    width: 10vw;
+  }
+  #about-nav-left::before {
+  left: 2vw;
+  }
+  .contact-message-wrapper {
+    width:44vw;
+    margin:0 0 0 2vw;
+  }
+  .contact-message {
+    width:100%;
+    height: 100%;
+  }
+}
+
+@media only screen and (min-aspect-ratio: 19.5/9) {
+  .contact-email {
+    left:0;
+    bottom:0;
+    width:100%;
+    padding: 0 0 2vh 2vw;
+    border-bottom: var(--stroke-width) solid var(--color-on-background);
+    transition: all 0.3s ease-in-out;
+    margin: 0 0 0 0vw;
+  }
+  .contact-email:focus {
+    border-bottom: var(--stroke-width) solid var(--color-on-background);
+    border-left: var(--stroke-width) solid var(--color-on-background);
+  }
+  .email-line {
+    display: none;
+  }
+}
+
+@media only screen and (min-aspect-ratio: 32/9) {
+  .nav-bar-item {
+    width:5vw;
+  }
+  .nav-bar-highlight::before,
+  .nav-bar-highlight::after {
+    width: 2vw;
+    height: 1vw;
+  }
+}
