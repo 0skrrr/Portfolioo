@@ -187,7 +187,7 @@ function setupNavbar(deviceRatio) {
 
 // Funkce pro ukládání a získávání scroll pozice
 function scrollPosition() {
-  ("scrollPosition called");
+  console.log("scrollPosition called");
   if (currentPage === "index.html") {
     window.addEventListener("load", function () {
       
@@ -200,6 +200,7 @@ function scrollPosition() {
       }
     });
 
+    // Uložení scroll hodnoty do cookie, buď při scrollování, nebo těsně před opuštěním stránky
     window.addEventListener("beforeunload", function () {
       const scrollY = window.scrollY;
       document.cookie = `scrollY=${scrollY}`;
