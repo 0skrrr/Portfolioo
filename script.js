@@ -62,14 +62,199 @@ function getDeviceType() {
   };
 }
 
+// Funkce prolnutí mezi stránkami indexu a projekty.
+function bodyFadeOut() {
+  // console.log("bodyFadeOut called");
+  window.addEventListener("DOMContentLoaded", () => {
+    document.body.classList.remove("body-fade");
+
+    document.querySelectorAll(".gallery-item").forEach((el) => {
+      el.addEventListener("click", () => {
+
+        // Získání url adresy z custom attributu u gallery itemu
+        const targetUrl = el.getAttribute("data-url");
+        if (!targetUrl) return;
+
+        document.body.classList.add("body-fade");
+
+        setTimeout(() => {
+          // Přesměrování na správné URL
+          window.location.href = targetUrl;
+        }, 500);
+      });
+    });
+  });
+}
+
+// Funkce pro fungování navbaru
+function setupNavbar(deviceRatio) {
+  // console.log("setupNavbar called;
+
+  const items = document.querySelectorAll(".nav-bar-item");
+  const highlightTopLeft = document.querySelector(".nav-bar-highlight-left");
+  const highlightBottomRight = document.querySelector(".nav-bar-highlight-right");
+
+  let scrollSections = getScrollSections(deviceRatio); 
+  let isHovering = false;
+  let hoverTimeout;
+  let scrollTimeout;
+
+  // Proměná, kterou budeme zakazovat přesunutí highlights při např. hoverování itemu. Aby to jen tak neodjíždělo do pryč.
+  let lockHighlight = false;
+
+
+  // Zjištění adresy stránky. Vzhledem k tomu, že jediné jiné stránky než index jsou ty projekty, tak to stačí takhle
+  const pathname = window.location.pathname;
+  const isGalleryPage = pathname.includes("/projects/");
+
+  // Pokud jsme na stránce projektu, bude to furt zobrazovat stejnou sekci. Jinak to bude normálně reagovat na scroll pozici
+  function updateHighlightToCurrentSection() {
+    if (!lockHighlight) {
+      if (isGalleryPage) {
+        moveHighlightToElement(items[2], highlightTopLeft, highlightBottomRight);
+        return;
+      }
+      const currentSection = getCurrentSection(scrollSections);
+      if (currentSection.navItem) {
+        moveHighlightToElement(currentSection.navItem, highlightTopLeft, highlightBottomRight);
+      }
+    }
+  }
+  // Při hover na item se highlights přesunou na něj
+  items.forEach((item, index) => {
+    item.addEventListener("mouseenter", () => {
+      isHovering = true;
+      lockHighlight = true;
+      clearTimeout(hoverTimeout);
+      moveHighlightToElement(item, highlightTopLeft, highlightBottomRight, true);
+    });
+
+    // A při ukončení hover se vrátí zpět
+    item.addEventListener("mouseleave", () => {
+      clearTimeout(hoverTimeout);
+      hoverTimeout = setTimeout(() => {
+        isHovering = false;
+        lockHighlight = false;
+
+        if (isGalleryPage) {
+          moveHighlightToElement(items[2], highlightTopLeft, highlightBottomRight);
+        } else {
+          requestAnimationFrame(() => {
+            scrollSections = getScrollSections(deviceRatio);
+            const currentSection = getCurrentSection(scrollSections);
+            const navItem = currentSection?.navItem;
+            moveHighlightToElement(navItem, highlightTopLeft, highlightBottomRight);
+          });
+        }
+
+        // Resetnutí stylů, teď bych to udělal jinak, ale... I mean... funguje
+        ["backgroundColor", "boxShadow", "transform"].forEach((prop) => {
+          highlightTopLeft.style[prop] = "";
+          highlightBottomRight.style[prop] = "";
+        });
+      }, 300);
+    });
+
+    // Při kliknutí scroll na dotyčnou pozici, případně redirect z project page na index
+    item.addEventListener("click", () => {
+
+      if (!isGalleryPage) {
+        window.scrollTo({
+          top: scrollSections[index].top,
+          behavior: "smooth",
+        });
+      }
+      else {
+        window.location.href = "../index.html";
+      }
+    });
+  });
+
+  // Původní pozice, při načtení stránky.
+  window.addEventListener("load", () => {
+    const target = isGalleryPage ? items[2] : getCurrentSection(scrollSections).element;
+    moveHighlightToElement(target, highlightTopLeft, highlightBottomRight);
+    highlightTopLeft.style.opacity = "1";
+    highlightBottomRight.style.opacity = "1";
+  });
+
+  // Aktualizace pozice při scrollování
+  window.addEventListener("scroll", () => {
+    if (!lockHighlight) {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        requestAnimationFrame(() => {
+          updateHighlightToCurrentSection();
+        });
+      }, 10);
+    }
+  });
+
+  
+  // Reset funkcionability při změně velikosti obrazovky
+  window.addEventListener("resize", () => {
+    scrollSections = getScrollSections(deviceRatio);
+    requestAnimationFrame(() => {
+      updateHighlightToCurrentSection();
+    });
+  });
+
+  // Nastavení hodnoty při načtení
+  window.addEventListener("load", () => {
+    requestAnimationFrame(() => {
+      scrollSections = getScrollSections(deviceRatio);
+      updateHighlightToCurrentSection();
+    });
+  });
+}
+
+// Funkce pro ukládání a získávání scroll pozice
+function scrollPosition() {
+  // console.log("scrollPosition called");
+  if (currentPage === "index.html") {
+    window.addEventListener("load", function () {
+      
+      // Tohle porovná případné dosavadní cookie, které by nám mohlo říkat, kam scrollnout
+      const match = document.cookie.match(/(?:^|; )scrollY=([^;]+)/);
+
+      if (match) {
+        const scrollY = parseInt(match[1], 10);
+        if (!isNaN(scrollY)) window.scrollTo(0, scrollY);
+      }
+    });
+
+    window.addEventListener("beforeunload", function () {
+      const scrollY = window.scrollY;
+      document.cookie = `scrollY=${scrollY}`;
+    });
+    
+    document.addEventListener("scroll", function () {
+      const scrollY = window.scrollY;
+      document.cookie = `scrollY=${scrollY}`;
+      console.log("Scroll position saved:", scrollY);
+    });
+  }
+}
 
 
 
-const deviceList = {
-    "4:3": 5, "3:2": 6, "5:3": 8, "16:10": 7, "16:9": 9,
-    "18:9": 10, "19.5:9": 11, "20:9": 12, "21:9": 13, "32:9": 14,
-    "1:1": 4, "3:5": 2, "2:3": 3, "9:16": 1,
-};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 function emailLineExpand() {
@@ -91,26 +276,6 @@ function emailLineExpand() {
       duration: 200,
       easing: "ease-in-out",
       fill: "forwards",
-    });
-  });
-}
-
-function bodyFadeOut() {
-  // console.log("bodyFadeOut called");
-  window.addEventListener("DOMContentLoaded", () => {
-    document.body.classList.remove("body-fade");
-
-    document.querySelectorAll(".gallery-item").forEach((el) => {
-      el.addEventListener("click", () => {
-        const targetUrl = el.getAttribute("data-url");
-        if (!targetUrl) return;
-
-        document.body.classList.add("body-fade");
-
-        setTimeout(() => {
-          window.location.href = targetUrl;
-        }, 300);
-      });
     });
   });
 }
@@ -221,123 +386,6 @@ function moveHighlightToElement(
   highlightBottomRight.style.right = `${pxToVw(clamp(rightPx))}vw`;
   highlightBottomRight.style.bottom = `${pxToVh(clamp(bottomPx))}vh`;
 
-}
-
-
-
-
-
-
-
-function setupNavbar(deviceRatio) {
-  // console.log("setupNavbar called;
-  const items = document.querySelectorAll(".nav-bar-item");
-  const highlightTopLeft = document.querySelector(".nav-bar-highlight-left");
-  const highlightBottomRight = document.querySelector(".nav-bar-highlight-right");
-
-  let scrollSections = getScrollSections(deviceRatio); 
-  let isHovering = false;
-  let hoverTimeout;
-  let scrollTimeout;
-  let lockHighlight = false;
-
-  const pathname = window.location.pathname;
-  const isGalleryPage = pathname.includes("/projects/");
-
-  function updateHighlightToCurrentSection() {
-    if (!lockHighlight) {
-      if (isGalleryPage) {
-        moveHighlightToElement(items[2], highlightTopLeft, highlightBottomRight);
-        return;
-      }
-      const currentSection = getCurrentSection(scrollSections);
-      if (currentSection.navItem) {
-        moveHighlightToElement(currentSection.navItem, highlightTopLeft, highlightBottomRight);
-      }
-    }
-  }
-
-  items.forEach((item, index) => {
-    item.addEventListener("mouseenter", () => {
-      isHovering = true;
-      lockHighlight = true;
-      clearTimeout(hoverTimeout);
-      moveHighlightToElement(item, highlightTopLeft, highlightBottomRight, true);
-    });
-
-    item.addEventListener("mouseleave", () => {
-      clearTimeout(hoverTimeout);
-      hoverTimeout = setTimeout(() => {
-        isHovering = false;
-        lockHighlight = false;
-
-        if (isGalleryPage) {
-          moveHighlightToElement(items[2], highlightTopLeft, highlightBottomRight);
-        } else {
-          requestAnimationFrame(() => {
-            scrollSections = getScrollSections(deviceRatio);
-            const currentSection = getCurrentSection(scrollSections);
-            const navItem = currentSection?.navItem;
-
-            if (navItem) {
-              moveHighlightToElement(navItem, highlightTopLeft, highlightBottomRight);
-            }
-          });
-        }
-
-        ["backgroundColor", "boxShadow", "transform"].forEach((prop) => {
-          highlightTopLeft.style[prop] = "";
-          highlightBottomRight.style[prop] = "";
-        });
-      }, 300);
-    });
-
-    item.addEventListener("click", () => {
-      if (!isGalleryPage) {
-        window.scrollTo({
-          top: scrollSections[index].top,
-          behavior: "smooth",
-        });
-      } else {
-        window.location.href = "../index.html";
-        document.cookie = "navbar-clicked=true; page=";
-      }
-    });
-  });
-
-  // Initial highlight on load
-  window.addEventListener("load", () => {
-    const target = isGalleryPage ? items[2] : getCurrentSection(scrollSections).element;
-    moveHighlightToElement(target, highlightTopLeft, highlightBottomRight);
-    highlightTopLeft.style.opacity = "1";
-    highlightBottomRight.style.opacity = "1";
-  });
-
-  // Scroll and resize handlers remain the same
-  window.addEventListener("scroll", () => {
-    if (!lockHighlight) {
-      clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-        requestAnimationFrame(() => {
-          updateHighlightToCurrentSection();
-        });
-      }, 10);
-    }
-  });
-
-  window.addEventListener("resize", () => {
-    scrollSections = getScrollSections(deviceRatio);
-    requestAnimationFrame(() => {
-      updateHighlightToCurrentSection();
-    });
-  });
-
-  window.addEventListener("load", () => {
-    requestAnimationFrame(() => {
-      scrollSections = getScrollSections(deviceRatio);
-      updateHighlightToCurrentSection();
-    });
-  });
 }
 
 
@@ -466,33 +514,6 @@ function aboutTransform(config) {
 }
 
 
-
-/* dnes */
-function scrollPosition() {
-  // console.log("scrollPosition called");
-  if (currentPage === "index.html") {
-    window.addEventListener("load", function () {
-      const match = document.cookie.match(/(?:^|; )scrollY=([^;]+)/);
-      if (match) {
-        const scrollY = parseInt(match[1], 10);
-        if (!isNaN(scrollY)) window.scrollTo(0, scrollY);
-      }
-    });
-    window.addEventListener("beforeunload", function () {
-      const scrollY = window.scrollY;
-      document.cookie = `scrollY=${scrollY}`;
-    });
-    document.addEventListener("scroll", function () {
-      const scrollY = window.scrollY;
-      document.cookie = `scrollY=${scrollY}`;
-      console.log("Scroll position saved:", scrollY);
-    });
-  }
-}
-
-
-
-
 function setupHoverExpansion(deviceRatio) {
   // console.log("setupHoverExpansion called");
   const ontrigger = document.querySelector('.footer');
@@ -503,8 +524,7 @@ function setupHoverExpansion(deviceRatio) {
   const navButton = document.querySelector(".nav-bar-button");
   const body = document.body;
 
-  const { closestMatch } = getDeviceType();
-  const device = deviceList[closestMatch] ?? 4;
+  const device = deviceRatio.index ?? 4;
 
 
   const CLASS_EXPANDED = 'expanded';
@@ -554,15 +574,14 @@ function setupHoverExpansion(deviceRatio) {
   });
 }
 
-function mobileNavbarExpand() {
+function mobileNavbarExpand(deviceRatio) {
   // console.log("mobileNavbarExpand called");
   const navbar = document.getElementById("nav-bar");
   const polygon = document.querySelector(".nav-bar-polygon");
   const items = document.querySelectorAll(".nav-bar-items");
   const navButton = document.querySelector(".nav-bar-button");
 
-  const { closestMatch } = getDeviceType();
-  const device = deviceList[closestMatch] ?? 4;
+  const device = deviceRatio.index ?? 4;
   
   if (device < 4) {
 
@@ -619,15 +638,19 @@ document.addEventListener("DOMContentLoaded", function () {
   console.log("aspectRatio " + deviceType.ratio + " (" + deviceType.closestMatch + ")" + " index: " + deviceType.index);
 
   bodyFadeOut();
+  setupNavbar(deviceType.closestMatch);
+  scrollPosition();
+
+
   if (deviceType.closestMatch === "16:9") {
     emailLineExpand();
   }
 
-  scrollPosition();
+
   
-  setupNavbar(deviceType.closestMatch);
-  setupHoverExpansion(deviceType.closestMatch);
-  mobileNavbarExpand(deviceType.closestMatch);
+
+  setupHoverExpansion(deviceType);
+  mobileNavbarExpand(deviceType);
 
 
   if (currentPage === "index.html") {
