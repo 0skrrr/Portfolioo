@@ -24,7 +24,7 @@ function vhToPx(vh) {
 
 // Funkce pro získání typu zařízení na základě poměru stran obrazovky
 function getDeviceType() {
-  // console.log("getDeviceType called");
+  console.log("getDeviceType called");
   
   const width = window.innerWidth;
   const height = window.innerHeight;
@@ -187,7 +187,7 @@ function setupNavbar(deviceRatio) {
 
 // Funkce pro ukládání a získávání scroll pozice
 function scrollPosition() {
-  // console.log("scrollPosition called");
+  ("scrollPosition called");
   if (currentPage === "index.html") {
     window.addEventListener("load", function () {
       
@@ -235,11 +235,10 @@ function scrollPosition() {
 
 
 function emailLineExpand() {
-  // console.log("emailLineExpand called");
+  console.log("emailLineExpand called");
   const line = document.getElementById("email-stroke");
   const trigger = document.getElementById("emaill");
-  var length = line.getTotalLength();
-  // console.log("Contact line length: " + length);
+
   trigger.addEventListener("focus", function () {
     line.animate([{ strokeDashoffset: 0 }], {
       duration: 200,
@@ -258,7 +257,7 @@ function emailLineExpand() {
 }
 
 function getScrollSections(deviceRatio) {
-  // console.log("getScrollSections called");
+  console.log("getScrollSections called");
   const sectionIds = ["home", "about", "gallery", "contact"];
   const navItems = document.querySelectorAll(".nav-bar-item");
 
@@ -296,7 +295,7 @@ function getScrollSections(deviceRatio) {
 
 
 function getCurrentSection(scrollSections) {
-  // console.log("getCurrentSection called");
+  console.log("getCurrentSection called");
   const scrollY = window.scrollY;
   let current = scrollSections[scrollSections.length - 1];
 
@@ -316,7 +315,7 @@ function moveHighlightToElement(
   highlightBottomRight,
   withPadding = false
 ) {
-  // console.log("moveHighlightToElement called with element:", element)
+  console.log("moveHighlightToElement called with element:", element)
   const rect = element.getBoundingClientRect();
   const container = document.querySelector(".nav-bar-items");
 
@@ -367,7 +366,7 @@ function moveHighlightToElement(
 
 
 function aboutTransform(config) {
-  // console.log("aboutTransform called")
+  console.log("aboutTransform called")
   const {
     textElementIds,
     buttonElementId,
@@ -492,7 +491,7 @@ function aboutTransform(config) {
 
 
 function setupHoverExpansion(deviceRatio) {
-  // console.log("setupHoverExpansion called");
+  console.log("setupHoverExpansion called");
   const ontrigger = document.querySelector('.footer');
   const navBar = document.querySelector('.nav-bar');
   const socialsDiv = document.querySelector('.socials-div');
@@ -516,7 +515,7 @@ function setupHoverExpansion(deviceRatio) {
   }
   
   function openSocials() {
-    // console.log("openSocials called");
+    console.log("openSocials called");
     if (device < 5) {
       navButton.style.display = 'none';
     }
@@ -532,7 +531,7 @@ function setupHoverExpansion(deviceRatio) {
   }
 
   function closeSocials() {
-    // console.log("closeSocials called");
+    console.log("closeSocials called");
     if (device < 5) {
       navButton.style.display = 'flex';
     }
@@ -552,7 +551,7 @@ function setupHoverExpansion(deviceRatio) {
 }
 
 function mobileNavbarExpand(deviceRatio) {
-  // console.log("mobileNavbarExpand called");
+  console.log("mobileNavbarExpand called");
   const navbar = document.getElementById("nav-bar");
   const polygon = document.querySelector(".nav-bar-polygon");
   const items = document.querySelectorAll(".nav-bar-items");
@@ -591,7 +590,7 @@ function mobileNavbarExpand(deviceRatio) {
 
 
 function enableGalleryCornerAnimation() {
-  // console.log("enableGalleryCornerAnimation called");
+  console.log("enableGalleryCornerAnimation called");
   const items = document.querySelectorAll('.gallery-item');
 
   items.forEach(item => {
