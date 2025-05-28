@@ -65,7 +65,7 @@ function getDeviceType() {
 
 // Funkce pro fungování navbaru
 function setupNavbar(deviceRatio) {
-  // console.log("setupNavbar called;
+  console.log("setupNavbar called");
 
   const items = document.querySelectorAll(".nav-bar-item");
   const highlightTopLeft = document.querySelector(".nav-bar-highlight-left");
