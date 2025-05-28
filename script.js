@@ -62,29 +62,6 @@ function getDeviceType() {
   };
 }
 
-// Funkce prolnutí mezi stránkami indexu a projekty.
-function bodyFadeOut() {
-  // console.log("bodyFadeOut called");
-  window.addEventListener("DOMContentLoaded", () => {
-    document.body.classList.remove("body-fade");
-
-    document.querySelectorAll(".gallery-item").forEach((el) => {
-      el.addEventListener("click", () => {
-
-        // Získání url adresy z custom attributu u gallery itemu
-        const targetUrl = el.getAttribute("data-url");
-        if (!targetUrl) return;
-
-        document.body.classList.add("body-fade");
-
-        setTimeout(() => {
-          // Přesměrování na správné URL
-          window.location.href = targetUrl;
-        }, 500);
-      });
-    });
-  });
-}
 
 // Funkce pro fungování navbaru
 function setupNavbar(deviceRatio) {
@@ -637,7 +614,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const deviceType = getDeviceType();
   console.log("aspectRatio " + deviceType.ratio + " (" + deviceType.closestMatch + ")" + " index: " + deviceType.index);
 
-  bodyFadeOut();
   setupNavbar(deviceType.closestMatch);
   scrollPosition();
 
