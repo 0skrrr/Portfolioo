@@ -685,13 +685,13 @@ document.addEventListener("DOMContentLoaded", function () {
   if (deviceType.closestMatch === "16:9") {
     emailLineExpand();
   }
-
+  console.warn("7")
   setupHoverExpansion(deviceType);
   
   if (currentPage === "index.html") {
     enableGalleryCornerAnimation();
 
-    
+    console.warn("9")
 
     aboutTransform({
       textElementIds: [
@@ -716,5 +716,5 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
   });
-
+  console.warn("10")
 });
