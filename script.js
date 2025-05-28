@@ -534,8 +534,8 @@ function aboutTransform(config) {
 }
 
 
-function setupHoverExpansion(deviceRatio) {
-  console.log("setupHoverExpansion called");
+function socialsExpand(deviceRatio) {
+  console.log("socialsExpand called");
   const ontrigger = document.querySelector('.footer');
   const navBar = document.querySelector('.nav-bar');
   const socialsDiv = document.querySelector('.socials-div');
@@ -555,7 +555,7 @@ function setupHoverExpansion(deviceRatio) {
   let isLocked = false;
 
   if (!ontrigger || !navBar || !socialsDiv || !contactPage) {
-    console.error('Required elements not found for setupHoverExpansion');
+    console.error('Required elements not found for socialsExpand');
   }
   
   function openSocials() {
@@ -629,6 +629,8 @@ document.addEventListener("DOMContentLoaded", function () {
   console.warn("5")
   scrollPosition();
   console.warn("6")
+  socialsExpand(deviceType);
+  
 
   if (deviceType.closestMatch === "16:9") {
     emailLineExpand();
@@ -637,7 +639,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   
 
-  setupHoverExpansion(deviceType);
+
   
 
 
@@ -670,51 +672,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   window.addEventListener("resize", () => {
-      console.warn("1")
-  const deviceType = getDeviceType();
-  console.warn("2")
-  console.log("aspectRatio " + deviceType.ratio + " (" + deviceType.closestMatch + ")" + " index: " + deviceType.index);
-  console.warn("3")
-  setupNavbar(deviceType.closestMatch);
-  console.warn("4")
-  mobileNavbar(deviceType);
-  console.warn("5")
-  scrollPosition();
-  console.warn("6")
 
-  if (deviceType.closestMatch === "16:9") {
-    emailLineExpand();
-  }
-  console.warn("7")
-  setupHoverExpansion(deviceType);
-  
-  if (currentPage === "index.html") {
-    enableGalleryCornerAnimation();
-
-    console.warn("9")
-
-    aboutTransform({
-      textElementIds: [
-        "about-text-a",
-        "about-text-b"
-      ],
-      buttonElementId: "button-me",
-      leftNavId: "about-nav-left",
-      rightNavId: "about-nav-right",
-      texts:[
-        "<div class=about-text-a>Oskrrr - Just a guy</div><img class=about-image-a src=images/about/about_me.JPG>",
-        "Workk",
-        "Hobbies",
-        "School"
-      ],
-      buttons: [
-        "Me",
-        "My Work",
-        "My Hobbies",
-        "My School"
-      ]
-    });
-  }
   });
   console.warn("10")
 });
