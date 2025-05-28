@@ -185,6 +185,48 @@ function setupNavbar(deviceRatio) {
   });
 }
 
+// Funkce pro mobilní verzi nav baru
+function mobileNavbar(deviceRatio) {
+  console.log("mobileNavbar called");
+
+  const navbar = document.getElementById("nav-bar");
+  const polygon = document.querySelector(".nav-bar-polygon");
+  const items = document.querySelectorAll(".nav-bar-items");
+  const navButton = document.querySelector(".nav-bar-button");
+
+  const device = deviceRatio.index ?? 4;
+  
+  // Pokud je zařízení mobilního poměru obrazovky, nastaví to správné styly a třídy
+  if (device < 4) {
+
+    navbar.style.cursor = "pointer";
+    let clicked = false;
+    items.forEach(item => item.classList.add("display-none"));
+
+    navbar.addEventListener("click", () => {
+      if (navbar.classList.contains("expanded")) return;
+
+      clicked = !clicked;
+      if (clicked) {
+        navbar.style.cursor = "auto";
+        navButton.style.display = 'none';
+        polygon.style.height = '100vh';
+        navbar.classList.add("nav-bar-clicked");
+        items.forEach(item => item.classList.remove("display-none"));
+
+      } else {
+        navbar.style.cursor = "pointer";
+        navButton.style.display = 'flex';
+        items.forEach(item => item.classList.add("display-none"));
+        navbar.classList.remove("nav-bar-clicked");
+        polygon.style.height = '10vh';
+      }
+    });
+  }
+}
+
+
+
 // Funkce pro ukládání a získávání scroll pozice
 function scrollPosition() {
   console.log("scrollPosition called");
@@ -213,6 +255,7 @@ function scrollPosition() {
     });
   }
 }
+
 
 
 
@@ -544,49 +587,13 @@ function setupHoverExpansion(deviceRatio) {
       contactPage.classList.add(CLASS_NO_POINTER);
     }
   }
-  getDeviceType
   ontrigger.addEventListener('click', () => {
     isLocked = !isLocked;
     isLocked ? openSocials() : closeSocials();
   });
 }
 
-function mobileNavbarExpand(deviceRatio) {
-  console.log("mobileNavbarExpand called");
-  const navbar = document.getElementById("nav-bar");
-  const polygon = document.querySelector(".nav-bar-polygon");
-  const items = document.querySelectorAll(".nav-bar-items");
-  const navButton = document.querySelector(".nav-bar-button");
 
-  const device = deviceRatio.index ?? 4;
-  
-  if (device < 4) {
-
-    navbar.style.cursor = "pointer";
-    let clicked = false;
-    items.forEach(item => item.classList.add("display-none"));
-
-    navbar.addEventListener("click", () => {
-      if (navbar.classList.contains("expanded")) return;
-
-      clicked = !clicked;
-      if (clicked) {
-        navbar.style.cursor = "auto";
-        navButton.style.display = 'none';
-        polygon.style.height = '100vh';
-        navbar.classList.add("nav-bar-clicked");
-        items.forEach(item => item.classList.remove("display-none"));
-
-      } else {
-        navbar.style.cursor = "pointer";
-        navButton.style.display = 'flex';
-        items.forEach(item => item.classList.add("display-none"));
-        navbar.classList.remove("nav-bar-clicked");
-        polygon.style.height = '10vh';
-      }
-    });
-  }
-}
 
 
 
@@ -609,14 +616,19 @@ function enableGalleryCornerAnimation() {
 
 
 
-// Po načtení stránky se spustí postupně všechny tyhle funkce
+// Po načtení stránky se spustí postupně všechny tyhle funkce, a jejich spuštění znova při upravení velikosti okna
 document.addEventListener("DOMContentLoaded", function () {
+  console.warn("1")
   const deviceType = getDeviceType();
+  console.warn("2")
   console.log("aspectRatio " + deviceType.ratio + " (" + deviceType.closestMatch + ")" + " index: " + deviceType.index);
-
+  console.warn("3")
   setupNavbar(deviceType.closestMatch);
+  console.warn("4")
+  mobileNavbar(deviceType);
+  console.warn("5")
   scrollPosition();
-
+  console.warn("6")
 
   if (deviceType.closestMatch === "16:9") {
     emailLineExpand();
@@ -626,7 +638,7 @@ document.addEventListener("DOMContentLoaded", function () {
   
 
   setupHoverExpansion(deviceType);
-  mobileNavbarExpand(deviceType);
+  
 
 
   if (currentPage === "index.html") {
@@ -657,5 +669,52 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  window.addEventListener("resize", () => {
+      console.warn("1")
+  const deviceType = getDeviceType();
+  console.warn("2")
+  console.log("aspectRatio " + deviceType.ratio + " (" + deviceType.closestMatch + ")" + " index: " + deviceType.index);
+  console.warn("3")
+  setupNavbar(deviceType.closestMatch);
+  console.warn("4")
+  mobileNavbar(deviceType);
+  console.warn("5")
+  scrollPosition();
+  console.warn("6")
+
+  if (deviceType.closestMatch === "16:9") {
+    emailLineExpand();
+  }
+
+  setupHoverExpansion(deviceType);
+  
+  if (currentPage === "index.html") {
+    enableGalleryCornerAnimation();
+
+    
+
+    aboutTransform({
+      textElementIds: [
+        "about-text-a",
+        "about-text-b"
+      ],
+      buttonElementId: "button-me",
+      leftNavId: "about-nav-left",
+      rightNavId: "about-nav-right",
+      texts:[
+        "<div class=about-text-a>Oskrrr - Just a guy</div><img class=about-image-a src=images/about/about_me.JPG>",
+        "Workk",
+        "Hobbies",
+        "School"
+      ],
+      buttons: [
+        "Me",
+        "My Work",
+        "My Hobbies",
+        "My School"
+      ]
+    });
+  }
+  });
 
 });
