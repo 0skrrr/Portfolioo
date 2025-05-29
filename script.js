@@ -185,6 +185,129 @@ function setupNavbar(deviceRatio) {
   });
 }
 
+
+// Funkce vykonávající ten pohyb highlight elementů, a také jejich správné umístění
+function moveHighlightToElement(
+  element,
+  highlightTopLeft,
+  highlightBottomRight,
+  withPadding = false
+) {
+  console.log("moveHighlightToElement called with element:", element)
+  
+  // Získání pozicových (a velikostních) informací elementu, ke kterému se budeme hýbat
+  const rect = element.getBoundingClientRect();
+
+  const container = document.querySelector(".nav-bar-items");
+
+  if (!container) {
+    console.error("Missing .nav-bar-items container!");
+    return;
+  }
+
+  const containerRect = container.getBoundingClientRect();
+  const { closestMatch } = getDeviceType();
+
+  // Další matice, kde jsou různé offsety pro highlights podle poměru obrazovky
+  const offsetMap = {
+    "4:3": 1,
+    "3:2": 1,
+    "5:3": 1,
+    "16:10": 1,
+    "16:9": 1,
+    "18:9": 1,
+    "19.5:9": 1,
+    "20:9": 1,
+    "21:9": 1,
+    "32:9": 1,
+    "1:1": 1,
+    "3:5": 2,       
+    "2:3": 2,      
+    "9:16": 2,    
+  };
+
+  const offset = vhToPx(withPadding ? (offsetMap[closestMatch] ?? 3) : 0);
+
+  // Vypočítání pozice a offsetu
+  // Pochopit + Fix
+  const leftPx = rect.left - containerRect.left - offset;
+  const topPx = rect.top - containerRect.top - offset;
+  const rightPx = containerRect.right - rect.right - offset;
+  const bottomPx = containerRect.bottom - rect.bottom - offset;
+
+  // Zajištění, že nepůjdem do mínusu
+  const clamp = (val) => Math.max(0, val);
+
+  // Přiřazení pozicových údajů, a ještě jejich převedení, které vlastně není až tak essential
+  highlightTopLeft.style.left = `${pxToVw(clamp(leftPx))}vw`;
+  highlightTopLeft.style.top = `${pxToVh(clamp(topPx))}vh`;
+  highlightBottomRight.style.right = `${pxToVw(clamp(rightPx))}vw`;
+  highlightBottomRight.style.bottom = `${pxToVh(clamp(bottomPx))}vh`;
+
+}
+
+
+
+// Funkce určující, podle jakých offsetů budeme fungovat na konkrétním poměru stránky
+function getScrollSections(deviceRatio) {
+  console.log("getScrollSections called");
+
+  const sectionIds = ["home", "about", "gallery", "contact"];
+  const navItems = document.querySelectorAll(".nav-bar-item");
+
+  // Pro různé poměry obrazovky potřebuju různé offsety při scrollování. 
+  const offsetMap = {
+    "4:3": 200,
+    "3:2": 200,
+    "5:3": 150,
+    "16:10": 200,
+    "16:9": 100,
+    "18:9": 110,
+    "19.5:9": 115,
+    "20:9": 50,
+    "21:9": 50,
+    "32:9": 10,
+    "1:1": 100,
+    "3:5": 1600,     
+    "2:3": 1800,     
+    "9:16": 1600,     
+  };
+
+  const offset = offsetMap[deviceRatio] ?? 90;
+  
+  return sectionIds.map((id, index) => {
+    const element = document.getElementById(id);
+    return {
+      name: id,
+      // Výpočet
+      top: element ? element.offsetTop - offset : 0,
+      element,
+      navItem: navItems[index] || null,
+    };
+  });
+}
+
+
+// Funkce určující, v jaké sekci stránky se zrovna nacházíme, má jako parametr informace z předchozí funkce
+function getCurrentSection(scrollSections) {
+  console.log("getCurrentSection called");
+
+  const scrollY = window.scrollY;
+  let current = scrollSections[scrollSections.length - 1];
+
+  // Výpočet
+  // Pochopit + Fix
+  for (let i = 0; i < scrollSections.length; i++) {
+    if (scrollY < scrollSections[i].top) {
+      current = scrollSections[Math.max(i - 1, 0)];
+      break;
+    }
+  }
+  return current;
+}
+
+
+
 // Funkce pro mobilní verzi nav baru
 function mobileNavbar(deviceRatio) {
   console.log("mobileNavbar called");
@@ -259,156 +382,75 @@ function scrollPosition() {
 
 
 
+//  Funkce pro zvětšování nav-baru, aby se mohla zobrazit socials sekce
+function socialsExpand(deviceRatio) {
+  console.log("socialsExpand called");
+  
+  const ontrigger = document.querySelector('.footer');
+  const navBar = document.querySelector('.nav-bar');
+  const socialsDiv = document.querySelector('.socials-div');
+  const contactPage = document.querySelector('.contact-page');
+
+  const navButton = document.querySelector(".nav-bar-button");
+  const body = document.body;
+
+  const device = deviceRatio.index ?? 4;
+
+  let isLocked = false;
+
+  if (!ontrigger || !navBar || !socialsDiv || !contactPage) {
+    console.error('Required elements not found for socialsExpand');
+  }
+  
 
 
+  //Funkce, která nastaví styly pro otevření socials
+  function openSocials() {
+    console.log("openSocials called");
 
+    // Pokud mobil, zmizí ten trigger čudlík
+    if (device < 5) {
+      navButton.style.display = 'none';
+    }
 
+    ontrigger.classList.add("footer-fixed")
+    navBar.classList.add('expanded');
+    socialsDiv.classList.remove('display-none');
+    body.classList.add('overflow-hidden');
 
+    if (contactPage) {
+      contactPage.classList.add('pointer-events-none');
+    }
+    
+  }
 
+  //Funkce, která nastaví styly pro zavření socials
+  function closeSocials() {
+    console.log("closeSocials called");
 
+    // Pokud mobil, objeví se ten trigger čudlík
+    if (device < 5) {
+      navButton.style.display = 'flex';
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-function emailLineExpand() {
-  console.log("emailLineExpand called");
-  const line = document.getElementById("email-stroke");
-  const trigger = document.getElementById("emaill");
-
-  trigger.addEventListener("focus", function () {
-    line.animate([{ strokeDashoffset: 0 }], {
-      duration: 200,
-      easing: "ease-in-out",
-      fill: "forwards",
-    });
-  });
-
-  trigger.addEventListener("blur", function () {
-    line.animate([{ strokeDashoffset: -70 }], {
-      duration: 200,
-      easing: "ease-in-out",
-      fill: "forwards",
-    });
-  });
-}
-
-function getScrollSections(deviceRatio) {
-  console.log("getScrollSections called");
-  const sectionIds = ["home", "about", "gallery", "contact"];
-  const navItems = document.querySelectorAll(".nav-bar-item");
-
-  const offsetMap = {
-    "4:3": 200,
-    "3:2": 200,
-    "5:3": 150,
-    "16:10": 200,
-    "16:9": 100,
-    "18:9": 110,
-    "19.5:9": 115,
-    "20:9": 50,
-    "21:9": 50,
-    "32:9": 10,
-    "1:1": 100,
-    "3:5": 1600,     
-    "2:3": 1800,     
-    "9:16": 1600,     
-  };
-
-
-  const offset = offsetMap[deviceRatio] ?? 90;
-
-  return sectionIds.map((id, index) => {
-    const element = document.getElementById(id);
-    return {
-      name: id,
-      top: element ? element.offsetTop - offset : 0,
-      element,
-      navItem: navItems[index] || null,
-    };
-  });
-}
-
-
-
-function getCurrentSection(scrollSections) {
-  console.log("getCurrentSection called");
-  const scrollY = window.scrollY;
-  let current = scrollSections[scrollSections.length - 1];
-
-  for (let i = 0; i < scrollSections.length; i++) {
-    if (scrollY < scrollSections[i].top) {
-      current = scrollSections[Math.max(i - 1, 0)];
-      break;
+    ontrigger.classList.remove("footer-fixed")
+    body.classList.remove('overflow-hidden');
+    socialsDiv.classList.add('display-none');
+    navBar.classList.remove('expanded');
+    if (contactPage) {
+      contactPage.classList.add('pointer-events-none');
     }
   }
-  return current;
+
+  // Při kliknutí na footer to zavolá vždy opačnou funkci, takže buď otevře nebo zavře ten socials part
+  ontrigger.addEventListener('click', () => {
+    isLocked = !isLocked;
+    isLocked ? openSocials() : closeSocials();
+  });
 }
 
 
-function moveHighlightToElement(
-  element,
-  highlightTopLeft,
-  highlightBottomRight,
-  withPadding = false
-) {
-  console.log("moveHighlightToElement called with element:", element)
-  const rect = element.getBoundingClientRect();
-  const container = document.querySelector(".nav-bar-items");
-
-  if (!container) {
-    console.error("Missing .nav-bar-items container!");
-    return;
-  }
-
-  const containerRect = container.getBoundingClientRect();
-  const { closestMatch } = getDeviceType();
-
-  const offsetMap = {
-    "4:3": 1,
-    "3:2": 1,
-    "5:3": 1,
-    "16:10": 1,
-    "16:9": 1,
-    "18:9": 1,
-    "19.5:9": 1,
-    "20:9": 1,
-    "21:9": 1,
-    "32:9": 1,
-    "1:1": 1,
-    "3:5": 2,        // New addition
-    "2:3": 2,        // New addition
-    "9:16": 2,       // Optional
-  };
-
-
-
-  const offset = vhToPx(withPadding ? (offsetMap[closestMatch] ?? 3) : 0);
-  //alert("closestmatch" + closestMatch);
-
-  const leftPx = rect.left - containerRect.left - offset;
-  const topPx = rect.top - containerRect.top - offset;
-  const rightPx = containerRect.right - rect.right - offset;
-  const bottomPx = containerRect.bottom - rect.bottom - offset;
-
-  // Clamp negatives just for safety
-  const clamp = (val) => Math.max(0, val);
-
-  highlightTopLeft.style.left = `${pxToVw(clamp(leftPx))}vw`;
-  highlightTopLeft.style.top = `${pxToVh(clamp(topPx))}vh`;
-  highlightBottomRight.style.right = `${pxToVw(clamp(rightPx))}vw`;
-  highlightBottomRight.style.bottom = `${pxToVh(clamp(bottomPx))}vh`;
-
-}
-
-
+// Funkce pro překlikávání obsahu About sekce, bere si jako parametry html strukturu pro content, plus string texty pro button
 function aboutTransform(config) {
   console.log("aboutTransform called")
   const {
@@ -424,7 +466,7 @@ function aboutTransform(config) {
   let index = 0;
   let current = 0;
 
-  const textEls = textElementIds.map((id) => document.getElementById(id));
+  const textEls = textElementIds.map((id) => document.getElementById(id)); //pochopit + fix
   const buttonEl = document.getElementById(buttonElementId);
   const leftNav = document.getElementById(leftNavId);
   const rightNav = document.getElementById(rightNavId);
@@ -434,37 +476,35 @@ function aboutTransform(config) {
     return;
   }
 
+  // Funkce přesunu, jako parametr bere string "left" nebo "right"
   function showContent(direction) {
     const next = 1 - current;
     const outEl = textEls[current];
     const inEl = textEls[next];
 
+    // Zjištění následujícího elementu
     index =
-      (index + (direction === "left" ? -1 : 1) + texts.length) % texts.length;
+      (index + (direction === "left" ? -1 : 1));
 
     inEl.innerHTML = texts[index];
 
-    
+    //  Dodání stylů a animací. Tohle by rozhodně šlo udělat kompaktněji a elegantněji, ale do tohoto se trošku bojím šťouchat, protože zprovoznění trvalo fakt dlouho
+    //  Chvilku ten proces tvoření byl pokus omyl, protože moje logika na to nefungovala. 
     const span = document.createElement("span");
     span.className = "about-button-text";
     span.textContent = buttons[index];
     buttonEl.innerHTML = "";
     buttonEl.appendChild(span);
-
-    
     inEl.className = "about-text";
     outEl.className = "about-text active";
-
-    
     inEl.style.transition = "none";
     inEl.style.transform =
       direction === "left" ? "translateX(-100%)" : "translateX(100%)";
     inEl.style.opacity = "0";
     inEl.style.zIndex = "1";
-    void inEl.offsetWidth; 
+    void inEl.offsetWidth; //pochopit + fix
     inEl.style.transition = ""; 
 
-    
     outEl.classList.add(
       direction === "left" ? "slide-out-right" : "slide-out-left"
     );
@@ -474,129 +514,80 @@ function aboutTransform(config) {
     );
     span.classList.add("active");
 
-    
+
+    // Nastavení správných stylů po provedení animací
     setTimeout(() => {
       outEl.className = "about-text";
       outEl.style.zIndex = "0";
       outEl.style.opacity = "0";
       outEl.style.transform =
         direction === "left" ? "translateX(100%)" : "translateX(-100%)";
-
       inEl.className = "about-text active";
       inEl.style.zIndex = "1";
       inEl.style.opacity = "1";
       inEl.style.transform = "translateX(0)";
-
       span.className = "about-button-text active";
 
       current = next;
     }, transitionDuration);
-
-
-        // === Mobile Swipe Gesture Support ===
-    let touchStartX = 0;
-    let touchEndX = 0;
-    function handleGesture() {
-      if (touchEndX < touchStartX - 50) {
-        showContent("right");
-      } else if (touchEndX > touchStartX + 50) {
-        showContent("left");
-
-      }
-    }
-
-    document.addEventListener("touchstart", (e) => {
-      touchStartX = e.changedTouches[0].screenX;
-    });
-
-    document.addEventListener("touchend", (e) => {
-      touchEndX = e.changedTouches[0].screenX;
-      handleGesture();
-    });
-
   }
 
 
 
-  
+  // Přiřazení aktuálního textu jako první položku v seznamu, to stejné u čudlíku
+  // Fix, pochopit
   textEls[0].innerHTML = texts[index];
   textEls[0].classList.add("active");
-
   const initialSpan = document.createElement("span");
   initialSpan.className = "about-button-text active";
   initialSpan.textContent = buttons[index];
   buttonEl.innerHTML = "";
   buttonEl.appendChild(initialSpan);
 
-
-  if (leftNav) leftNav.onclick = () => showContent("left");
-  if (rightNav) rightNav.onclick = () => showContent("right");
+  // Volání showContent funkce pro obě strany
+  // Fix!!!
+  if (leftNav) {
+    leftNav.addEventListener("click", () => {
+      showContent("left");
+    });
+  }
+  if (rightNav) {
+    rightNav.addEventListener("click", () => {
+      showContent("right");
+    });
+  }
 }
 
 
-function socialsExpand(deviceRatio) {
-  console.log("socialsExpand called");
-  const ontrigger = document.querySelector('.footer');
-  const navBar = document.querySelector('.nav-bar');
-  const socialsDiv = document.querySelector('.socials-div');
-  const contactPage = document.querySelector('.contact-page');
+// Funkce pro trošku jiný způsob / styl dělání té reaktivní email čáry.
+// Kvůli tomu, jak to funguje, to mám povolené jenom na jedno konkrétním poměru obrazovky.
+function emailLineExpand() {
+  console.log("emailLineExpand called");
 
-  const navButton = document.querySelector(".nav-bar-button");
-  const body = document.body;
+  const line = document.getElementById("email-stroke");
+  const trigger = document.getElementById("emaill");
 
-  const device = deviceRatio.index ?? 4;
+  // Animace při psaní
+  trigger.addEventListener("focus", function () {
+    line.animate([{ strokeDashoffset: 0 }], {
+      duration: 200,
+      easing: "ease-in-out",
+      fill: "forwards",
+    });
+  });
 
-
-  const CLASS_EXPANDED = 'expanded';
-  const CLASS_HIDDEN = 'display-none';
-  const CLASS_NO_SCROLL = 'overflow-hidden';
-  const CLASS_NO_POINTER = 'pointer-events-none';
-
-  let isLocked = false;
-
-  if (!ontrigger || !navBar || !socialsDiv || !contactPage) {
-    console.error('Required elements not found for socialsExpand');
-  }
-  
-  function openSocials() {
-    console.log("openSocials called");
-    if (device < 5) {
-      navButton.style.display = 'none';
-    }
-    ontrigger.classList.add("footer-fixed")
-    navBar.classList.add(CLASS_EXPANDED);
-    socialsDiv.classList.remove(CLASS_HIDDEN);
-    body.classList.add(CLASS_NO_SCROLL);
-
-    if (contactPage) {
-      contactPage.classList.add(CLASS_NO_POINTER);
-    }
-    
-  }
-
-  function closeSocials() {
-    console.log("closeSocials called");
-    if (device < 5) {
-      navButton.style.display = 'flex';
-    }
-    ontrigger.classList.remove("footer-fixed")
-    body.classList.remove(CLASS_NO_SCROLL);
-    socialsDiv.classList.add(CLASS_HIDDEN);
-    navBar.classList.remove(CLASS_EXPANDED);
-    if (contactPage) {
-      contactPage.classList.add(CLASS_NO_POINTER);
-    }
-  }
-  ontrigger.addEventListener('click', () => {
-    isLocked = !isLocked;
-    isLocked ? openSocials() : closeSocials();
+  // Animace při ukončení psaní
+  trigger.addEventListener("blur", function () {
+    line.animate([{ strokeDashoffset: -70 }], {
+      duration: 200,
+      easing: "ease-in-out",
+      fill: "forwards",
+    });
   });
 }
 
 
-
-
-
+// Velmi jednoduchá funkce, která nastaví správné třídy pro položky galerie, aby se na-animovaly rohy při hover
 function enableGalleryCornerAnimation() {
   console.log("enableGalleryCornerAnimation called");
   const items = document.querySelectorAll('.gallery-item');
@@ -614,9 +605,7 @@ function enableGalleryCornerAnimation() {
 
 
 
-
-
-// Po načtení stránky se spustí postupně všechny tyhle funkce, a jejich spuštění znova při upravení velikosti okna
+// Po načtení stránky se spustí postupně všechny tyhle funkce
 document.addEventListener("DOMContentLoaded", function () {
   console.warn("1")
   const deviceType = getDeviceType();
@@ -632,22 +621,11 @@ document.addEventListener("DOMContentLoaded", function () {
   socialsExpand(deviceType);
   
 
-  if (deviceType.closestMatch === "16:9") {
-    emailLineExpand();
-  }
-
-
-  
-
-
-  
-
-
+// Spuštění funkcí, které mají použití jenom na hlavní stránce
   if (currentPage === "index.html") {
-    enableGalleryCornerAnimation();
+    console.warn("7")
 
-    
-
+    // Vložení variací kodu pro about page
     aboutTransform({
       textElementIds: [
         "about-text-a",
@@ -669,10 +647,18 @@ document.addEventListener("DOMContentLoaded", function () {
         "My School"
       ]
     });
+    console.warn("7.1")
+    if (deviceType.closestMatch === "16:9") {
+      emailLineExpand();
+      console.warn("7.2")
+    }
+    console.warn("8")
+    enableGalleryCornerAnimation();
+    console.warn("9")
   }
-
-  window.addEventListener("resize", () => {
-
-  });
   console.warn("10")
+});
+
+window.addEventListener("resize", () => {
+  console.warn("11")
 });
