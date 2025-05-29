@@ -604,8 +604,8 @@ function enableGalleryCornerAnimation() {
 }
 
 
-// Po načtení stránky se spustí postupně všechny tyhle funkce
-document.addEventListener("DOMContentLoaded", function () {
+// Funkce volající všechny funkce. Existuje proto, abych ji mohl volat v několika scenáriích (resize,onload), místo toho abych to tam měl několikrát celé
+function allFunctions() {
   console.warn("1")
   const deviceType = getDeviceType();
   console.warn("2")
@@ -656,8 +656,20 @@ document.addEventListener("DOMContentLoaded", function () {
     console.warn("9")
   }
   console.warn("10")
+}
+
+// Následující dvě funkce dělají to stejné, ale používám dva různé způsoby zápisu. Pomohlo mi vizuálně vidět rozdíl mezi arrow function a klasickým způsobem. 
+// Jsou to prostě jenom dvě věci pozměněné, nic víc.
+
+
+// Po načtení stránky se spustí všechno
+document.addEventListener("DOMContentLoaded", function () {
+  console.warn("Onload spouštěč")
+  allFunctions();
 });
 
+// Po změny velikosti okna se spustí všechno
 window.addEventListener("resize", () => {
-  console.warn("11")
+  console.warn("Resize spouštěč")
+  allFunctions()
 });
