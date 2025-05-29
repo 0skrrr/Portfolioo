@@ -564,7 +564,7 @@ function emailSend () {
   function theAct () {
     const email = document.getElementById("emaill").value;
     const message = document.getElementById("contact-message").value;
-    emailjs.send("8267628902994824", "template_gl8qsfa", {
+    emailjs.send("8267628902994824", "template_q8zp78o", {
       email:email,
       message:message
     })
@@ -576,6 +576,7 @@ function emailSend () {
       alert("hell nah")
     })
   }
+  emailjs.init("Aq25gB-YP1glON6CK");
   document.querySelectorAll(".send-button").forEach(button => {
     button.addEventListener("click", theAct);
   });
