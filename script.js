@@ -619,7 +619,7 @@ document.addEventListener("DOMContentLoaded", function () {
   scrollPosition();
   console.warn("6")
   socialsExpand(deviceType);
-  
+  console.warn("6.1")
 
 // Spuštění funkcí, které mají použití jenom na hlavní stránce
   if (currentPage === "index.html") {
