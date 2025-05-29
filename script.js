@@ -561,8 +561,23 @@ function aboutTransform(config) {
 
 
 function emailSend () {
-  emailjs.init({
-    publicKey: "Aq25gB-YP1glON6CK",
+  function theAct () {
+    const email = document.getElementById("emaill").value;
+    const message = document.getElementById("contact-message").value;
+    emailjs.send("8267628902994824", "template_gl8qsfa", {
+      email:email,
+      message:message
+    })
+    .then(() => {
+      alert("Message sent giga")
+    })
+    .catch((error) => {
+      console.error("emailiga nefungiga  ", error);
+      alert("hell nah")
+    })
+  }
+  document.querySelectorAll(".send-button").forEach(button => {
+    button.addEventListener("click", theAct);
   });
 }
 
