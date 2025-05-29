@@ -672,7 +672,7 @@ function allFunctions() {
     });
     console.warn("7.1")
     emailSend();
-    if (deviceType.closestMatch === "16:9") {
+    if (deviceType.closestMatch === "16:9" || deviceType.closestMatch === "19.5:9") {
       console.warn("7.1.1")
       emailLineExpand();
       console.warn("7.2")
