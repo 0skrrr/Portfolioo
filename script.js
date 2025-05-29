@@ -648,6 +648,7 @@ function allFunctions() {
     });
     console.warn("7.1")
     if (deviceType.closestMatch === "16:9") {
+      console.warn("7.1.1")
       emailLineExpand();
       console.warn("7.2")
     }
@@ -658,9 +659,10 @@ function allFunctions() {
   console.warn("10")
 }
 
+
+
 // Následující dvě funkce dělají to stejné, ale používám dva různé způsoby zápisu. Pomohlo mi vizuálně vidět rozdíl mezi arrow function a klasickým způsobem. 
 // Jsou to prostě jenom dvě věci pozměněné, nic víc.
-
 
 // Po načtení stránky se spustí všechno
 document.addEventListener("DOMContentLoaded", function () {
