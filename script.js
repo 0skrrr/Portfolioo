@@ -559,6 +559,15 @@ function aboutTransform(config) {
 }
 
 
+
+function emailSend () {
+  emailjs.init({
+    publicKey: "Aq25gB-YP1glON6CK",
+  });
+}
+
+
+
 // Funkce pro trošku jiný způsob / styl dělání té reaktivní email čáry.
 // Kvůli tomu, jak to funguje, to mám povolené jenom na jedno konkrétním poměru obrazovky.
 function emailLineExpand() {
@@ -647,6 +656,7 @@ function allFunctions() {
       ]
     });
     console.warn("7.1")
+    emailSend();
     if (deviceType.closestMatch === "16:9") {
       console.warn("7.1.1")
       emailLineExpand();
