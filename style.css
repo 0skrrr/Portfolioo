@@ -744,6 +744,7 @@ Přes JS poté offset resetuju, takže se ta čára při psaní "prodlouží"*/
   align-items: center;
   overflow: hidden;
   background: var(--color-background);
+  cursor: pointer;
 }
 
 /* Třída, kterou nastavím pro footer, když se na něj klikne. Zůstane tak do dalšího kliknutí v obraze */
