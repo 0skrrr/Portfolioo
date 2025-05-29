@@ -622,7 +622,7 @@ document.addEventListener("DOMContentLoaded", function () {
   console.warn("6.1")
 
 // Spuštění funkcí, které mají použití jenom na hlavní stránce
-  if (currentPage === "index.html") {
+  if (currentPage === "") {
     console.warn("7")
 
     // Vložení variací kodu pro about page
