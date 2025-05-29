@@ -559,7 +559,7 @@ function aboutTransform(config) {
 }
 
 
-
+// Funkce pro automatické zasílání emailu, obsahuje speciální příkazy
 function emailSend () {
   function theAct () {
     const email = document.getElementById("emaill").value;
@@ -569,17 +569,28 @@ function emailSend () {
       message:message
     })
     .then(() => {
-      alert("Message sent giga")
+      alert("Message sent succesfully")
     })
     .catch((error) => {
-      console.error("emailiga nefungiga  ", error);
-      alert("hell nah")
+      console.error("Email sent error", error);
+      alert("error")
     })
   }
   emailjs.init("Aq25gB-YP1glON6CK");
   document.querySelectorAll(".send-button").forEach(button => {
     button.addEventListener("click", theAct);
   });
+  emailjs.send("8267628902994824", "template_arf9rga", {
+      email:email,
+      message:message
+    })
+    .then(() => {
+      alert("Message sent succesfully")
+    })
+    .catch((error) => {
+      console.error("Email sent error", error);
+      alert("error")
+    })
 }
 
 
