@@ -575,12 +575,7 @@ function emailSend () {
       console.error("Email sent error", error);
       alert("error")
     })
-  }
-  emailjs.init("Aq25gB-YP1glON6CK");
-  document.querySelectorAll(".send-button").forEach(button => {
-    button.addEventListener("click", theAct);
-  });
-  emailjs.send("8267628902994824", "template_arf9rga", {
+    emailjs.send("8267628902994824", "template_arf9rga", {
       email:email,
       message:message
     })
@@ -591,6 +586,11 @@ function emailSend () {
       console.error("Email sent error", error);
       alert("error")
     })
+  }
+  emailjs.init("Aq25gB-YP1glON6CK");
+  document.querySelectorAll(".send-button").forEach(button => {
+    button.addEventListener("click", theAct);
+  });
 }
 
 
