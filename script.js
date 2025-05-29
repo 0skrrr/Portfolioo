@@ -452,7 +452,6 @@ function socialsExpand(deviceRatio) {
 
 // Funkce pro překlikávání obsahu About sekce, bere si jako parametry html strukturu pro content, plus string texty pro button
 function aboutTransform(config) {
-  console.log("aboutTransform called")
   const {
     textElementIds,
     buttonElementId,
@@ -466,97 +465,71 @@ function aboutTransform(config) {
   let index = 0;
   let current = 0;
 
-  const textEls = textElementIds.map((id) => document.getElementById(id)); //pochopit + fix
+  const textEls = [
+    document.getElementById(textElementIds[0]),
+    document.getElementById(textElementIds[1])
+  ];
   const buttonEl = document.getElementById(buttonElementId);
   const leftNav = document.getElementById(leftNavId);
   const rightNav = document.getElementById(rightNavId);
 
-  if (textEls.some((el) => !el) || !buttonEl) {
+  if (!textEls[0] || !textEls[1] || !buttonEl || !leftNav || !rightNav) {
     console.error("Missing elements.");
     return;
   }
 
-  // Funkce přesunu, jako parametr bere string "left" nebo "right"
+  function updateButton() {
+    buttonEl.innerHTML = '<span class="about-button-text active">' + buttons[index] + '</span>';
+  }
+
   function showContent(direction) {
     const next = 1 - current;
     const outEl = textEls[current];
     const inEl = textEls[next];
 
-    // Zjištění následujícího elementu
-    index =
-      (index + (direction === "left" ? -1 : 1));
+    index = (index + (direction === "left" ? -1 : 1) + texts.length) % texts.length;
 
     inEl.innerHTML = texts[index];
+    updateButton();
 
-    //  Dodání stylů a animací. Tohle by rozhodně šlo udělat kompaktněji a elegantněji, ale do tohoto se trošku bojím šťouchat, protože zprovoznění trvalo fakt dlouho
-    //  Chvilku ten proces tvoření byl pokus omyl, protože moje logika na to nefungovala. 
-    const span = document.createElement("span");
-    span.className = "about-button-text";
-    span.textContent = buttons[index];
-    buttonEl.innerHTML = "";
-    buttonEl.appendChild(span);
     inEl.className = "about-text";
-    outEl.className = "about-text active";
     inEl.style.transition = "none";
-    inEl.style.transform =
-      direction === "left" ? "translateX(-100%)" : "translateX(100%)";
+    inEl.style.transform = direction === "left" ? "translateX(-100%)" : "translateX(100%)";
     inEl.style.opacity = "0";
     inEl.style.zIndex = "1";
-    void inEl.offsetWidth; //pochopit + fix
-    inEl.style.transition = ""; 
+    void inEl.offsetWidth; // force reflow
+    inEl.style.transition = "";
 
-    outEl.classList.add(
-      direction === "left" ? "slide-out-right" : "slide-out-left"
-    );
-    inEl.classList.add(
-      direction === "left" ? "slide-in-left" : "slide-in-right",
-      "active"
-    );
-    span.classList.add("active");
+    outEl.classList.add(direction === "left" ? "slide-out-right" : "slide-out-left");
+    inEl.classList.add(direction === "left" ? "slide-in-left" : "slide-in-right", "active");
 
-
-    // Nastavení správných stylů po provedení animací
     setTimeout(() => {
       outEl.className = "about-text";
       outEl.style.zIndex = "0";
       outEl.style.opacity = "0";
-      outEl.style.transform =
-        direction === "left" ? "translateX(100%)" : "translateX(-100%)";
+      outEl.style.transform = direction === "left" ? "translateX(100%)" : "translateX(-100%)";
+
       inEl.className = "about-text active";
       inEl.style.zIndex = "1";
       inEl.style.opacity = "1";
       inEl.style.transform = "translateX(0)";
-      span.className = "about-button-text active";
 
       current = next;
     }, transitionDuration);
   }
 
+  // Initial setup
+  textEls[current].innerHTML = texts[index];
+  textEls[current].className = "about-text active";
+  updateButton();
 
-
-  // Přiřazení aktuálního textu jako první položku v seznamu, to stejné u čudlíku
-  // Fix, pochopit
-  textEls[0].innerHTML = texts[index];
-  textEls[0].classList.add("active");
-  const initialSpan = document.createElement("span");
-  initialSpan.className = "about-button-text active";
-  initialSpan.textContent = buttons[index];
-  buttonEl.innerHTML = "";
-  buttonEl.appendChild(initialSpan);
-
-  // Volání showContent funkce pro obě strany
-  // Fix!!!
-  if (leftNav) {
-    leftNav.addEventListener("click", () => {
-      showContent("left");
-    });
-  }
-  if (rightNav) {
-    rightNav.addEventListener("click", () => {
-      showContent("right");
-    });
-  }
+  // Click events
+  leftNav.onclick = () => showContent("left");
+  rightNav.onclick = () => showContent("right");
 }
+
+
+
 
 
 // Funkce pro automatické zasílání emailu, obsahuje speciální příkazy
@@ -671,7 +644,7 @@ function allFunctions() {
       rightNavId: "about-nav-right",
       texts:[
         "<div class=about-text-a>Oskrrr - Just a guy</div><img class=about-image-a alt=If there isn't my photo, use your imagination src=images/about/about_me.JPG>",
-        "Workk",
+        "<div class=about-text-a>I haven´t yet developed some work identity. You can be the one who will give me an opportunity to change that</div>",
         "Hobbies",
         "School"
       ],
