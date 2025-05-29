@@ -604,7 +604,6 @@ function enableGalleryCornerAnimation() {
 }
 
 
-
 // Po načtení stránky se spustí postupně všechny tyhle funkce
 document.addEventListener("DOMContentLoaded", function () {
   console.warn("1")
@@ -622,7 +621,7 @@ document.addEventListener("DOMContentLoaded", function () {
   console.warn("6.1")
 
 // Spuštění funkcí, které mají použití jenom na hlavní stránce
-  if (currentPage === "") {
+  if (currentPage === "" || currentPage === "index.html") {
     console.warn("7")
 
     // Vložení variací kodu pro about page
@@ -635,7 +634,7 @@ document.addEventListener("DOMContentLoaded", function () {
       leftNavId: "about-nav-left",
       rightNavId: "about-nav-right",
       texts:[
-        "<div class=about-text-a>Oskrrr - Just a guy</div><img class=about-image-a src=images/about/about_me.JPG>",
+        "<div class=about-text-a>Oskrrr - Just a guy</div><img class=about-image-a alt=If there isn't my photo, use your imagination src=images/about/about_me.JPG>",
         "Workk",
         "Hobbies",
         "School"
