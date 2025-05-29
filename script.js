@@ -594,7 +594,7 @@ function emailLineExpand() {
   // Animace při psaní
   trigger.addEventListener("focus", function () {
     line.animate([{ strokeDashoffset: 0 }], {
-      duration: 200,
+      duration: 500,
       easing: "ease-in-out",
       fill: "forwards",
     });
@@ -603,7 +603,7 @@ function emailLineExpand() {
   // Animace při ukončení psaní
   trigger.addEventListener("blur", function () {
     line.animate([{ strokeDashoffset: -70 }], {
-      duration: 200,
+      duration: 500,
       easing: "ease-in-out",
       fill: "forwards",
     });
