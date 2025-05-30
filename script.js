@@ -533,6 +533,7 @@ function aboutTransform(config) {
 
 
 // Funkce pro automatické zasílání emailu, obsahuje speciální příkazy
+// Jeden mě, jeden tomu, kdo to poslal
 function emailSend () {
   function theAct () {
     const email = document.getElementById("emaill").value;
@@ -541,23 +542,9 @@ function emailSend () {
       email:email,
       message:message
     })
-    .then(() => {
-      alert("Message sent succesfully")
-    })
-    .catch((error) => {
-      console.error("Email sent error", error);
-      alert("error")
-    })
     emailjs.send("8267628902994824", "template_arf9rga", {
       email:email,
       message:message
-    })
-    .then(() => {
-      alert("Message sent succesfully")
-    })
-    .catch((error) => {
-      console.error("Email sent error", error);
-      alert("error")
     })
   }
   emailjs.init("Aq25gB-YP1glON6CK");
