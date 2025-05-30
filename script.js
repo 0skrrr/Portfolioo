@@ -51,7 +51,7 @@ function getDeviceType() {
   ];
 
   // Získání nejbližšího poměru stran z předdefinovaného seznamu za pomocí jednoduchého porovnání rozdílů
-  const closest = knownRatios.reduce((first, second) => {
+  const closest = knownRatios.reduce(function (first, second) {
     return Math.abs(second.ratio - aspectRatio) < Math.abs(first.ratio - aspectRatio) ? second : first;
   });
 
@@ -98,8 +98,8 @@ function setupNavbar(deviceRatio) {
     }
   }
   // Při hover na item se highlights přesunou na něj
-  items.forEach((item, index) => {
-    item.addEventListener("mouseenter", () => {
+  items.forEach(function (item, index) {
+    item.addEventListener("mouseenter", function () {
       isHovering = true;
       lockHighlight = true;
       clearTimeout(hoverTimeout);
@@ -107,16 +107,16 @@ function setupNavbar(deviceRatio) {
     });
 
     // A při ukončení hover se vrátí zpět
-    item.addEventListener("mouseleave", () => {
+    item.addEventListener("mouseleave", function () {
       clearTimeout(hoverTimeout);
-      hoverTimeout = setTimeout(() => {
+      hoverTimeout = setTimeout( function () {
         isHovering = false;
         lockHighlight = false;
 
         if (isGalleryPage) {
           moveHighlightToElement(items[2], highlightTopLeft, highlightBottomRight);
         } else {
-          requestAnimationFrame(() => {
+          requestAnimationFrame( function () {
             scrollSections = getScrollSections(deviceRatio);
             const currentSection = getCurrentSection(scrollSections);
             const navItem = currentSection?.navItem;
@@ -125,7 +125,7 @@ function setupNavbar(deviceRatio) {
         }
 
         // Resetnutí stylů, teď bych to udělal jinak, ale... I mean... funguje
-        ["backgroundColor", "boxShadow", "transform"].forEach((prop) => {
+        ["backgroundColor", "boxShadow", "transform"].forEach( function (prop) {
           highlightTopLeft.style[prop] = "";
           highlightBottomRight.style[prop] = "";
         });
@@ -133,7 +133,7 @@ function setupNavbar(deviceRatio) {
     });
 
     // Při kliknutí scroll na dotyčnou pozici, případně redirect z project page na index
-    item.addEventListener("click", () => {
+    item.addEventListener("click", function () {
 
       if (!isGalleryPage) {
         window.scrollTo({
@@ -148,7 +148,7 @@ function setupNavbar(deviceRatio) {
   });
 
   // Původní pozice, při načtení stránky.
-  window.addEventListener("load", () => {
+  window.addEventListener("load", function () {
     const target = isGalleryPage ? items[2] : getCurrentSection(scrollSections).element;
     moveHighlightToElement(target, highlightTopLeft, highlightBottomRight);
     highlightTopLeft.style.opacity = "1";
@@ -156,11 +156,11 @@ function setupNavbar(deviceRatio) {
   });
 
   // Aktualizace pozice při scrollování
-  window.addEventListener("scroll", () => {
+  window.addEventListener("scroll", function () {
     if (!lockHighlight) {
       clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-        requestAnimationFrame(() => {
+      scrollTimeout = setTimeout( function () {
+        requestAnimationFrame( function () {
           updateHighlightToCurrentSection();
         });
       }, 10);
@@ -169,16 +169,16 @@ function setupNavbar(deviceRatio) {
 
   
   // Reset funkcionability při změně velikosti obrazovky
-  window.addEventListener("resize", () => {
+  window.addEventListener("resize", function ()  {
     scrollSections = getScrollSections(deviceRatio);
-    requestAnimationFrame(() => {
+    requestAnimationFrame( function () {
       updateHighlightToCurrentSection();
     });
   });
 
   // Nastavení hodnoty při načtení
-  window.addEventListener("load", () => {
-    requestAnimationFrame(() => {
+  window.addEventListener("load", function () {
+    requestAnimationFrame(function () {
       scrollSections = getScrollSections(deviceRatio);
       updateHighlightToCurrentSection();
     });
@@ -236,7 +236,9 @@ function moveHighlightToElement(
   const bottomPx = containerRect.bottom - rect.bottom - offset;
 
   // Zajištění, že nepůjdem do mínusu
-  const clamp = (val) => Math.max(0, val);
+  const clamp = function (val) {
+    return Math.max(0, val);
+  };
 
   // Přiřazení pozicových údajů, a ještě jejich převedení, které vlastně není až tak essential
   highlightTopLeft.style.left = `${pxToVw(clamp(leftPx))}vw`;
@@ -275,7 +277,7 @@ function getScrollSections(deviceRatio) {
 
   const offset = offsetMap[deviceRatio] ?? 90;
   
-  return sectionIds.map((id, index) => {
+  return sectionIds.map( function (id, index) {
     const element = document.getElementById(id);
     return {
       name: id,
@@ -324,9 +326,12 @@ function mobileNavbar(deviceRatio) {
 
     navbar.style.cursor = "pointer";
     let clicked = false;
-    items.forEach(item => item.classList.add("display-none"));
 
-    navbar.addEventListener("click", () => {
+    items.forEach(function (item) {
+      item.classList.add("display-none");
+    });
+
+    navbar.addEventListener("click", function () {
       if (navbar.classList.contains("expanded")) return;
 
       clicked = !clicked;
@@ -335,12 +340,16 @@ function mobileNavbar(deviceRatio) {
         navButton.style.display = 'none';
         polygon.style.height = '100vh';
         navbar.classList.add("nav-bar-clicked");
-        items.forEach(item => item.classList.remove("display-none"));
+        items.forEach(function (item) {
+          item.classList.remove("display-none")
+        });
 
       } else {
         navbar.style.cursor = "pointer";
         navButton.style.display = 'flex';
-        items.forEach(item => item.classList.add("display-none"));
+        items.forEach((function(item) {
+          item.classList.add("display-none")
+        }));
         navbar.classList.remove("nav-bar-clicked");
         polygon.style.height = '10vh';
       }
@@ -443,7 +452,7 @@ function socialsExpand(deviceRatio) {
   }
 
   // Při kliknutí na footer to zavolá vždy opačnou funkci, takže buď otevře nebo zavře ten socials part
-  ontrigger.addEventListener('click', () => {
+  ontrigger.addEventListener('click', function () {
     isLocked = !isLocked;
     isLocked ? openSocials() : closeSocials();
   });
@@ -503,7 +512,7 @@ function aboutTransform(config) {
     outEl.classList.add(direction === "left" ? "slide-out-right" : "slide-out-left");
     inEl.classList.add(direction === "left" ? "slide-in-left" : "slide-in-right", "active");
 
-    setTimeout(() => {
+    setTimeout(function () {
       outEl.className = "about-text";
       outEl.style.zIndex = "0";
       outEl.style.opacity = "0";
@@ -524,8 +533,12 @@ function aboutTransform(config) {
   updateButton();
 
   // Click events
-  leftNav.onclick = () => showContent("left");
-  rightNav.onclick = () => showContent("right");
+  leftNav.onclick = function () {
+    showContent("left")
+  };
+  rightNav.onclick = function () {
+    showContent("right")
+  };
 }
 
 
@@ -548,7 +561,7 @@ function emailSend () {
     })
   }
   emailjs.init("Aq25gB-YP1glON6CK");
-  document.querySelectorAll(".send-button").forEach(button => {
+  document.querySelectorAll(".send-button").forEach(function (button) {
     button.addEventListener("click", theAct);
   });
 }
@@ -588,12 +601,14 @@ function enableGalleryCornerAnimation() {
   console.log("enableGalleryCornerAnimation called");
   const items = document.querySelectorAll('.gallery-item');
 
-  items.forEach(item => {
-    item.addEventListener('mouseenter', () => {
+  items.forEach( function (item) {
+    item.addEventListener('mouseenter', function ()
+    {
       item.classList.add('hovering');
     });
 
-    item.addEventListener('mouseleave', () => {
+    item.addEventListener('mouseleave', function ()
+    {
       item.classList.remove('hovering');
     });
   });
@@ -658,17 +673,8 @@ function allFunctions() {
 
 
 
-// Následující dvě funkce dělají to stejné, ale používám dva různé způsoby zápisu. Pomohlo mi vizuálně vidět rozdíl mezi arrow function a klasickým způsobem. 
-// Jsou to prostě jenom dvě věci pozměněné, nic víc.
-
 // Po načtení stránky se spustí všechno
 document.addEventListener("DOMContentLoaded", function () {
   console.warn("Onload spouštěč")
   allFunctions();
-});
-
-// Po změny velikosti okna se spustí všechno
-window.addEventListener("resize", () => {
-  console.warn("Resize spouštěč")
-  allFunctions()
 });
