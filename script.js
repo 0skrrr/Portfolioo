@@ -678,3 +678,4 @@ document.addEventListener("DOMContentLoaded", function () {
   console.warn("Onload spouštěč")
   allFunctions();
 });
+
