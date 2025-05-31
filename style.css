@@ -233,7 +233,7 @@ body.body-fade {
   background: var(--color-on-background);
   clip-path: polygon(0% 0%, 0% 65%, 23% 65%, 32% 75%, 58% 65%, 72% 75%, 100% 65%, 100% 0%);
   height: 90vh;
-  transition: all 0.3s ease-in-out;
+  transition: all 0.5s ease-in-out;
   position: fixed;
 }
 

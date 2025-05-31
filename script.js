@@ -64,8 +64,8 @@ function getDeviceType() {
 
 
 // Funkce pro fungování navbaru
-function setupNavbar(deviceRatio) {
-  console.log("setupNavbar called");
+function navbar(deviceRatio) {
+  console.log("navbar called");
 
   const items = document.querySelectorAll(".nav-bar-item");
   const highlightTopLeft = document.querySelector(".nav-bar-highlight-left");
@@ -132,18 +132,27 @@ function setupNavbar(deviceRatio) {
       }, 300);
     });
 
-    // Při kliknutí scroll na dotyčnou pozici, případně redirect z project page na index
+    // Při kliknutí scroll na dotyčnou pozici, případně redirect z project page na index.
+    // Pokud se klikne na item, pokud jsou socials otevřené, musí to nejdřív zavřít socials, a potom až scrollnout
     item.addEventListener("click", function () {
-
-      if (!isGalleryPage) {
-        window.scrollTo({
-          top: scrollSections[index].top,
-          behavior: "smooth",
-        });
-      }
-      else {
+      if (isGalleryPage) {
         window.location.href = "../index.html";
-      };
+        return;
+      }
+
+      const targetTop = scrollSections[index].top;
+
+      if (!document.querySelector(".socials-div").classList.contains('display-none')) {
+
+        const deviceType = getDeviceType();
+        socialsExpand(deviceType,1);
+        setTimeout(function () {
+          window.scrollTo({ top: targetTop, behavior: "smooth" });
+        }, 100);
+
+      } else {
+        window.scrollTo({ top: targetTop, behavior: "smooth" });
+      }
     });
   });
 
@@ -198,11 +207,6 @@ function moveHighlightToElement(
   const rect = element.getBoundingClientRect();
 
   const container = document.querySelector(".nav-bar-items");
-
-  if (!container) {
-    console.error("Missing .nav-bar-items container!");
-    return;
-  }
 
   const containerRect = container.getBoundingClientRect();
   const { closestMatch } = getDeviceType();
@@ -386,7 +390,7 @@ function scrollPosition() {
 }
 
 //  Funkce pro zvětšování nav-baru, aby se mohla zobrazit socials sekce
-function socialsExpand(deviceRatio) {
+function socialsExpand(deviceRatio, fromNavBar) {
   console.log("socialsExpand called");
   
   const ontrigger = document.querySelector('.footer');
@@ -398,8 +402,7 @@ function socialsExpand(deviceRatio) {
   const body = document.body;
 
   const device = deviceRatio.index ?? 4;
-
-  let isLocked = false;
+  let state = false;
 
   if (!ontrigger || !navBar || !socialsDiv || !contactPage) {
     console.error('Required elements not found for socialsExpand');
@@ -418,9 +421,11 @@ function socialsExpand(deviceRatio) {
     navBar.classList.add('expanded');
     socialsDiv.classList.remove('display-none');
     body.classList.add('overflow-hidden');
-    if (contactPage) {
-      contactPage.classList.add('pointer-events-none');
-    }
+    
+    document.querySelector('.hero-page').style.display = 'none';
+    document.querySelector('.about-page').style.display = 'none';
+    document.querySelector('.gallery-page').style.display = 'none';
+    document.querySelector('.contact-page').style.display = 'none';
   }
 
   //Funkce, která nastaví styly pro zavření socials
@@ -436,15 +441,27 @@ function socialsExpand(deviceRatio) {
     body.classList.remove('overflow-hidden');
     socialsDiv.classList.add('display-none');
     navBar.classList.remove('expanded');
-    if (contactPage) {
-      contactPage.classList.add('pointer-events-none');
+    document.querySelector('.hero-page').style.display = '';
+    document.querySelector('.about-page').style.display = '';
+    document.querySelector('.gallery-page').style.display = '';
+    document.querySelector('.contact-page').style.display = '';
+
+    // Jiné chování, když výzva k zavření přijde z nav baru
+    if (fromNavBar === 0) {
+      console.warn("fromNavahhdj" + fromNavBar)
+      window.scrollTo({ top: 100000});
     }
+  }
+
+  // Jiné chování, když výzva k zavření přijde z nav baru
+  if (fromNavBar === 1) {
+    closeSocials(1);
   }
 
   // Při kliknutí na footer to zavolá vždy opačnou funkci, takže buď otevře nebo zavře ten socials part
   ontrigger.addEventListener('click', function () {
-    isLocked = !isLocked;
-    isLocked ? openSocials() : closeSocials();
+    state = !state;
+    state ? openSocials() : closeSocials(0);
   });
 }
 
@@ -606,13 +623,13 @@ function allFunctions() {
   console.warn("2");
   console.log("aspectRatio " + deviceType.ratio + " (" + deviceType.closestMatch + ")" + " index: " + deviceType.index);
   console.warn("3");
-  setupNavbar(deviceType.closestMatch);
+  navbar(deviceType.closestMatch);
   console.warn("4");
   mobileNavbar(deviceType);
   console.warn("5");
   scrollPosition();
   console.warn("6");
-  socialsExpand(deviceType);
+  socialsExpand(deviceType,0);
   console.warn("6.1");
 
   // Spuštění funkcí, které mají použití jenom na hlavní stránce
