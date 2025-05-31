@@ -21,6 +21,18 @@ function vhToPx(vh) {
   return (vh / 100) * window.innerHeight;
 };
 
+let lastScrollTop = 0;
+window.addEventListener("wheel", function (e) {
+  e.preventDefault();
+  const direction = Math.sign(e.deltaY);
+  lastScrollTop = window.scrollY + direction * 1;
+  window.scrollTo({
+    top: lastScrollTop,
+    behavior: "smooth"
+  });
+}, { passive: false });
+
+
 
 // Funkce pro získání typu zařízení na základě poměru stran obrazovky
 function getDeviceType() {
@@ -142,7 +154,7 @@ function navbar(deviceRatio) {
 
       const targetTop = scrollSections[index].top;
 
-      if (!document.querySelector(".socials-div").classList.contains('display-none')) {
+      if (!document.querySelector(".socials-div").classList.contains("display-none")) {
 
         const deviceType = getDeviceType();
         socialsExpand(deviceType,1);
@@ -340,8 +352,8 @@ function mobileNavbar(deviceRatio) {
       clicked = !clicked;
       if (clicked) {
         navbar.style.cursor = "auto";
-        navButton.style.display = 'none';
-        polygon.style.height = '100vh';
+        navButton.style.display = "none";
+        polygon.style.height = "100vh";
         navbar.classList.add("nav-bar-clicked");
         items.forEach(function (item) {
           item.classList.remove("display-none");
@@ -349,12 +361,12 @@ function mobileNavbar(deviceRatio) {
 
       } else {
         navbar.style.cursor = "pointer";
-        navButton.style.display = 'flex';
+        navButton.style.display = "flex";
         items.forEach((function(item) {
           item.classList.add("display-none");
         }));
         navbar.classList.remove("nav-bar-clicked");
-        polygon.style.height = '10vh';
+        polygon.style.height = "10vh";
       }
     });
   }
@@ -393,10 +405,10 @@ function scrollPosition() {
 function socialsExpand(deviceRatio, fromNavBar) {
   console.log("socialsExpand called");
   
-  const ontrigger = document.querySelector('.footer');
-  const navBar = document.querySelector('.nav-bar');
-  const socialsDiv = document.querySelector('.socials-div');
-  const contactPage = document.querySelector('.contact-page');
+  const ontrigger = document.querySelector(".footer");
+  const navBar = document.querySelector(".nav-bar");
+  const socialsDiv = document.querySelector(".socials-div");
+  const contactPage = document.querySelector(".contact-page");
 
   const navButton = document.querySelector(".nav-bar-button");
   const body = document.body;
@@ -405,7 +417,7 @@ function socialsExpand(deviceRatio, fromNavBar) {
   let state = false;
 
   if (!ontrigger || !navBar || !socialsDiv || !contactPage) {
-    console.error('Required elements not found for socialsExpand');
+    console.error("Required elements not found for socialsExpand");
   }
 
   //Funkce, která nastaví styly pro otevření socials
@@ -414,18 +426,18 @@ function socialsExpand(deviceRatio, fromNavBar) {
 
     // Pokud mobil, zmizí ten trigger čudlík
     if (device < 5) {
-      navButton.style.display = 'none';
+      navButton.style.display = "none";
     }
 
     ontrigger.classList.add("footer-fixed");
-    navBar.classList.add('expanded');
-    socialsDiv.classList.remove('display-none');
-    body.classList.add('overflow-hidden');
+    navBar.classList.add("expanded");
+    socialsDiv.classList.remove("display-none");
+    body.classList.add("overflow-hidden");
     
-    document.querySelector('.hero-page').style.display = 'none';
-    document.querySelector('.about-page').style.display = 'none';
-    document.querySelector('.gallery-page').style.display = 'none';
-    document.querySelector('.contact-page').style.display = 'none';
+    document.querySelector(".hero-page").style.display = "none";
+    document.querySelector(".about-page").style.display = "none";
+    document.querySelector(".gallery-page").style.display = "none";
+    document.querySelector(".contact-page").style.display = "none";
   }
 
   //Funkce, která nastaví styly pro zavření socials
@@ -434,17 +446,17 @@ function socialsExpand(deviceRatio, fromNavBar) {
 
     // Pokud mobil, objeví se ten trigger čudlík
     if (device < 5) {
-      navButton.style.display = 'flex';
+      navButton.style.display = "flex";
     }
 
     ontrigger.classList.remove("footer-fixed");
-    body.classList.remove('overflow-hidden');
-    socialsDiv.classList.add('display-none');
-    navBar.classList.remove('expanded');
-    document.querySelector('.hero-page').style.display = '';
-    document.querySelector('.about-page').style.display = '';
-    document.querySelector('.gallery-page').style.display = '';
-    document.querySelector('.contact-page').style.display = '';
+    body.classList.remove("overflow-hidden");
+    socialsDiv.classList.add("display-none");
+    navBar.classList.remove("expanded");
+    document.querySelector(".hero-page").style.display = "";
+    document.querySelector(".about-page").style.display = "";
+    document.querySelector(".gallery-page").style.display = "";
+    document.querySelector(".contact-page").style.display = "";
 
     // Jiné chování, když výzva k zavření přijde z nav baru
     if (fromNavBar === 0) {
@@ -459,7 +471,7 @@ function socialsExpand(deviceRatio, fromNavBar) {
   }
 
   // Při kliknutí na footer to zavolá vždy opačnou funkci, takže buď otevře nebo zavře ten socials part
-  ontrigger.addEventListener('click', function () {
+  ontrigger.addEventListener("click", function () {
     state = !state;
     state ? openSocials() : closeSocials(0);
   });
@@ -496,6 +508,7 @@ function aboutTransform(config) {
   }
 
   function updateButton() {
+    // Absolutně nechápu, proč tu musí být single quotes... proč to nemůže být stejně jako všechno ostatníí?
     buttonEl.innerHTML = '<span class="about-button-text active">' + buttons[index] + '</span>';
   }
 
@@ -603,15 +616,15 @@ function emailLineExpand() {
 // Velmi jednoduchá funkce, která nastaví správné třídy pro položky galerie, aby se na-animovaly rohy při hover
 function enableGalleryCornerAnimation() {
   console.log("enableGalleryCornerAnimation called");
-  const items = document.querySelectorAll('.gallery-item');
+  const items = document.querySelectorAll(".gallery-item");
 
   items.forEach(function (item) {
-    item.addEventListener('mouseenter', function () {
-      item.classList.add('hovering');
+    item.addEventListener("mouseenter", function () {
+      item.classList.add("hovering");
     });
 
-    item.addEventListener('mouseleave', function () {
-      item.classList.remove('hovering');
+    item.addEventListener("mouseleave", function () {
+      item.classList.remove("hovering");
     });
   });
 };
@@ -645,8 +658,10 @@ function allFunctions() {
       buttonElementId: "button-me",
       leftNavId: "about-nav-left",
       rightNavId: "about-nav-right",
+
+      // Tady taky musí v tom alt být single qutoes... proč, to nevím, ale nezajímá mě to natolik, abych si o tom něco zjistil
       texts: [
-        "<div class=about-text-a>Oskrrr - Just a guy</div><img class=about-image-a alt=If there isn't my photo, use your imagination src=images/about/about_me.JPG>",
+        "<div class=about-text-a>Oskrrr - Just a guy</div><img class=about-image-a alt='If there isn&#39;t my photo, use your imagination' src=images/about/about_me.JPG>",
         "<div class=about-text-a>I haven´t yet developed some work identity. You can be the one who will give me an opportunity to change that</div>",
         "Hobbies",
         "School"
