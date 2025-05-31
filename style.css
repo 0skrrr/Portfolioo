@@ -136,7 +136,7 @@ body.body-fade {
   top: 0;
   backdrop-filter: blur(2px) grayscale(1) invert(1);
   z-index: 4;
-  transition: 0.2s all slow-in-out;
+  transition: all 0.3s ease-in-out;
 }
 .nav-bar-polygon {
   width: 100vw;
@@ -150,7 +150,7 @@ body.body-fade {
   justify-content: flex-end;
   align-items: center;
   gap: 3vw;
-  transition: 0.2s all slow-in-out;
+  transition: all 0.3s ease-in-out;
 }
 .nav-bar-button {
   display:none;
@@ -921,6 +921,7 @@ Přes JS poté offset resetuju, takže se ta čára při psaní "prodlouží"*/
     border-bottom-color: var(--color-on-background);
   }
 }
+
 
 /* Odteď už jenom responzivita. Víc do detailů o ní bude v js a v dokumentaci.
 Zde se mi o ní nechce rozepisovat, většina je self-explanatory.	*/

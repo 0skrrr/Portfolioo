@@ -11,15 +11,15 @@ let navBarSocialsExpanded = false;
 function pxToVw(px) {
   // console.log("pxToVw called with px:", px);
   return (px / window.innerWidth) * 100;
-}
+};
 function pxToVh(px) {
   // console.log("pxToVh called with px:", px);
   return (px / window.innerHeight) * 100;
-}
+};
 function vhToPx(vh) {
   // console.log("vhToPx called with vh:", vh);
   return (vh / 100) * window.innerHeight;
-}
+};
 
 
 // Funkce pro získání typu zařízení na základě poměru stran obrazovky
@@ -60,7 +60,7 @@ function getDeviceType() {
     closestMatch: closest.label,
     index: closest.index,
   };
-}
+};
 
 
 // Funkce pro fungování navbaru
@@ -79,7 +79,6 @@ function setupNavbar(deviceRatio) {
   // Proměná, kterou budeme zakazovat přesunutí highlights při např. hoverování itemu. Aby to jen tak neodjíždělo do pryč.
   let lockHighlight = false;
 
-
   // Zjištění adresy stránky. Vzhledem k tomu, že jediné jiné stránky než index jsou ty projekty, tak to stačí takhle
   const pathname = window.location.pathname;
   const isGalleryPage = pathname.includes("/projects/");
@@ -90,13 +89,14 @@ function setupNavbar(deviceRatio) {
       if (isGalleryPage) {
         moveHighlightToElement(items[2], highlightTopLeft, highlightBottomRight);
         return;
-      }
+      };
       const currentSection = getCurrentSection(scrollSections);
       if (currentSection.navItem) {
         moveHighlightToElement(currentSection.navItem, highlightTopLeft, highlightBottomRight);
-      }
-    }
-  }
+      };
+    };
+  };
+
   // Při hover na item se highlights přesunou na něj
   items.forEach(function (item, index) {
     item.addEventListener("mouseenter", function () {
@@ -122,7 +122,7 @@ function setupNavbar(deviceRatio) {
             const navItem = currentSection?.navItem;
             moveHighlightToElement(navItem, highlightTopLeft, highlightBottomRight);
           });
-        }
+        };
 
         // Resetnutí stylů, teď bych to udělal jinak, ale... I mean... funguje
         ["backgroundColor", "boxShadow", "transform"].forEach( function (prop) {
@@ -143,7 +143,7 @@ function setupNavbar(deviceRatio) {
       }
       else {
         window.location.href = "../index.html";
-      }
+      };
     });
   });
 
@@ -164,10 +164,9 @@ function setupNavbar(deviceRatio) {
           updateHighlightToCurrentSection();
         });
       }, 10);
-    }
+    };
   });
 
-  
   // Reset funkcionability při změně velikosti obrazovky
   window.addEventListener("resize", function ()  {
     scrollSections = getScrollSections(deviceRatio);
@@ -183,7 +182,7 @@ function setupNavbar(deviceRatio) {
       updateHighlightToCurrentSection();
     });
   });
-}
+};
 
 
 // Funkce vykonávající ten pohyb highlight elementů, a také jejich správné umístění
@@ -193,7 +192,7 @@ function moveHighlightToElement(
   highlightBottomRight,
   withPadding = false
 ) {
-  console.log("moveHighlightToElement called with element:", element)
+  console.log("moveHighlightToElement called with element:", element);
   
   // Získání pozicových (a velikostních) informací elementu, ke kterému se budeme hýbat
   const rect = element.getBoundingClientRect();
@@ -245,7 +244,6 @@ function moveHighlightToElement(
   highlightTopLeft.style.top = `${pxToVh(clamp(topPx))}vh`;
   highlightBottomRight.style.right = `${pxToVw(clamp(rightPx))}vw`;
   highlightBottomRight.style.bottom = `${pxToVh(clamp(bottomPx))}vh`;
-
 }
 
 
@@ -277,7 +275,7 @@ function getScrollSections(deviceRatio) {
 
   const offset = offsetMap[deviceRatio] ?? 90;
   
-  return sectionIds.map( function (id, index) {
+  return sectionIds.map(function (id, index) {
     const element = document.getElementById(id);
     return {
       name: id,
@@ -307,6 +305,7 @@ function getCurrentSection(scrollSections) {
   }
   return current;
 }
+
 
 
 
@@ -341,14 +340,14 @@ function mobileNavbar(deviceRatio) {
         polygon.style.height = '100vh';
         navbar.classList.add("nav-bar-clicked");
         items.forEach(function (item) {
-          item.classList.remove("display-none")
+          item.classList.remove("display-none");
         });
 
       } else {
         navbar.style.cursor = "pointer";
         navButton.style.display = 'flex';
         items.forEach((function(item) {
-          item.classList.add("display-none")
+          item.classList.add("display-none");
         }));
         navbar.classList.remove("nav-bar-clicked");
         polygon.style.height = '10vh';
@@ -356,8 +355,6 @@ function mobileNavbar(deviceRatio) {
     });
   }
 }
-
-
 
 // Funkce pro ukládání a získávání scroll pozice
 function scrollPosition() {
@@ -388,9 +385,6 @@ function scrollPosition() {
   }
 }
 
-
-
-
 //  Funkce pro zvětšování nav-baru, aby se mohla zobrazit socials sekce
 function socialsExpand(deviceRatio) {
   console.log("socialsExpand called");
@@ -410,8 +404,6 @@ function socialsExpand(deviceRatio) {
   if (!ontrigger || !navBar || !socialsDiv || !contactPage) {
     console.error('Required elements not found for socialsExpand');
   }
-  
-
 
   //Funkce, která nastaví styly pro otevření socials
   function openSocials() {
@@ -422,15 +414,13 @@ function socialsExpand(deviceRatio) {
       navButton.style.display = 'none';
     }
 
-    ontrigger.classList.add("footer-fixed")
+    ontrigger.classList.add("footer-fixed");
     navBar.classList.add('expanded');
     socialsDiv.classList.remove('display-none');
     body.classList.add('overflow-hidden');
-
     if (contactPage) {
       contactPage.classList.add('pointer-events-none');
     }
-    
   }
 
   //Funkce, která nastaví styly pro zavření socials
@@ -442,7 +432,7 @@ function socialsExpand(deviceRatio) {
       navButton.style.display = 'flex';
     }
 
-    ontrigger.classList.remove("footer-fixed")
+    ontrigger.classList.remove("footer-fixed");
     body.classList.remove('overflow-hidden');
     socialsDiv.classList.add('display-none');
     navBar.classList.remove('expanded');
@@ -457,6 +447,7 @@ function socialsExpand(deviceRatio) {
     isLocked ? openSocials() : closeSocials();
   });
 }
+
 
 
 // Funkce pro překlikávání obsahu About sekce, bere si jako parametry html strukturu pro content, plus string texty pro button
@@ -506,7 +497,7 @@ function aboutTransform(config) {
     inEl.style.transform = direction === "left" ? "translateX(-100%)" : "translateX(100%)";
     inEl.style.opacity = "0";
     inEl.style.zIndex = "1";
-    void inEl.offsetWidth; // force reflow
+    void inEl.offsetWidth;
     inEl.style.transition = "";
 
     outEl.classList.add(direction === "left" ? "slide-out-right" : "slide-out-left");
@@ -534,16 +525,12 @@ function aboutTransform(config) {
 
   // Click events
   leftNav.onclick = function () {
-    showContent("left")
+    showContent("left");
   };
   rightNav.onclick = function () {
-    showContent("right")
+    showContent("right");
   };
 }
-
-
-
-
 
 // Funkce pro automatické zasílání emailu, obsahuje speciální příkazy
 // Jeden mě, jeden tomu, kdo to poslal
@@ -554,17 +541,18 @@ function emailSend () {
     emailjs.send("8267628902994824", "template_q8zp78o", {
       email:email,
       message:message
-    })
+    });
     emailjs.send("8267628902994824", "template_arf9rga", {
       email:email,
       message:message
-    })
+    });
   }
   emailjs.init("Aq25gB-YP1glON6CK");
   document.querySelectorAll(".send-button").forEach(function (button) {
     button.addEventListener("click", theAct);
   });
 }
+
 
 
 
@@ -593,47 +581,43 @@ function emailLineExpand() {
       fill: "forwards",
     });
   });
-}
-
+};
 
 // Velmi jednoduchá funkce, která nastaví správné třídy pro položky galerie, aby se na-animovaly rohy při hover
 function enableGalleryCornerAnimation() {
   console.log("enableGalleryCornerAnimation called");
   const items = document.querySelectorAll('.gallery-item');
 
-  items.forEach( function (item) {
-    item.addEventListener('mouseenter', function ()
-    {
+  items.forEach(function (item) {
+    item.addEventListener('mouseenter', function () {
       item.classList.add('hovering');
     });
 
-    item.addEventListener('mouseleave', function ()
-    {
+    item.addEventListener('mouseleave', function () {
       item.classList.remove('hovering');
     });
   });
-}
-
+};
 
 // Funkce volající všechny funkce. Existuje proto, abych ji mohl volat v několika scenáriích (resize,onload), místo toho abych to tam měl několikrát celé
 function allFunctions() {
-  console.warn("1")
+  console.warn("1");
   const deviceType = getDeviceType();
-  console.warn("2")
+  console.warn("2");
   console.log("aspectRatio " + deviceType.ratio + " (" + deviceType.closestMatch + ")" + " index: " + deviceType.index);
-  console.warn("3")
+  console.warn("3");
   setupNavbar(deviceType.closestMatch);
-  console.warn("4")
+  console.warn("4");
   mobileNavbar(deviceType);
-  console.warn("5")
+  console.warn("5");
   scrollPosition();
-  console.warn("6")
+  console.warn("6");
   socialsExpand(deviceType);
-  console.warn("6.1")
+  console.warn("6.1");
 
-// Spuštění funkcí, které mají použití jenom na hlavní stránce
+  // Spuštění funkcí, které mají použití jenom na hlavní stránce
   if (currentPage === "" || currentPage === "index.html") {
-    console.warn("7")
+    console.warn("7");
 
     // Vložení variací kodu pro about page
     aboutTransform({
@@ -644,7 +628,7 @@ function allFunctions() {
       buttonElementId: "button-me",
       leftNavId: "about-nav-left",
       rightNavId: "about-nav-right",
-      texts:[
+      texts: [
         "<div class=about-text-a>Oskrrr - Just a guy</div><img class=about-image-a alt=If there isn't my photo, use your imagination src=images/about/about_me.JPG>",
         "<div class=about-text-a>I haven´t yet developed some work identity. You can be the one who will give me an opportunity to change that</div>",
         "Hobbies",
@@ -657,25 +641,22 @@ function allFunctions() {
         "My School"
       ]
     });
-    console.warn("7.1")
+    console.warn("7.1");
     emailSend();
     if (deviceType.closestMatch === "16:9" || deviceType.closestMatch === "19.5:9") {
-      console.warn("7.1.1")
+      console.warn("7.1.1");
       emailLineExpand();
-      console.warn("7.2")
+      console.warn("7.2");
     }
-    console.warn("8")
+    console.warn("8");
     enableGalleryCornerAnimation();
-    console.warn("9")
+    console.warn("9");
   }
-  console.warn("10")
-}
-
-
+  console.warn("10");
+};
 
 // Po načtení stránky se spustí všechno
 document.addEventListener("DOMContentLoaded", function () {
-  console.warn("Onload spouštěč")
+  console.warn("Onload spouštěč");
   allFunctions();
 });
-
