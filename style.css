@@ -1368,6 +1368,9 @@ Zde se mi o ní nechce rozepisovat, většina je self-explanatory.	*/
     width:100%;
     height: 100%;
   }
+  .contact-email {
+    width:35vw;
+  }
 }
 
 @media only screen and (min-aspect-ratio: 19.5/9) {
