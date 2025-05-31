@@ -21,18 +21,6 @@ function vhToPx(vh) {
   return (vh / 100) * window.innerHeight;
 };
 
-let lastScrollTop = 0;
-window.addEventListener("wheel", function (e) {
-  e.preventDefault();
-  const direction = Math.sign(e.deltaY);
-  lastScrollTop = window.scrollY + direction * 100000;
-  window.scrollTo({
-    top: lastScrollTop,
-    behavior: "smooth"
-  });
-}, { passive: false });
-
-
 
 // Funkce pro získání typu zařízení na základě poměru stran obrazovky
 function getDeviceType() {
