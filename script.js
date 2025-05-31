@@ -25,7 +25,7 @@ let lastScrollTop = 0;
 window.addEventListener("wheel", function (e) {
   e.preventDefault();
   const direction = Math.sign(e.deltaY);
-  lastScrollTop = window.scrollY + direction * 500;
+  lastScrollTop = window.scrollY + direction * 100000;
   window.scrollTo({
     top: lastScrollTop,
     behavior: "smooth"
