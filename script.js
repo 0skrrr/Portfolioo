@@ -626,12 +626,13 @@ function allFunctions() {
   console.warn("5");
   scrollPosition();
   console.warn("6");
+  socialsExpand(deviceType,0);
+  console.warn("6.1");
 
   // Spuštění funkcí, které mají použití jenom na hlavní stránce
   if (currentPage === "" || currentPage === "index.html") {
     console.warn("7");
-    socialsExpand(deviceType,0);
-    console.warn("7.05");
+
 
     // Vložení variací kodu pro about page
     about({
