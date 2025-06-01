@@ -961,16 +961,25 @@ Zde se mi o ní nechce rozepisovat, většina je self-explanatory.	*/
   }
 
 
-  .socials-div {
-    justify-content: center;
-  }
   .socials {
-    flex-flow: row wrap;
-    width: 80vw;
+    flex-flow: column wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 90vw;
     row-gap: 1vh;
     column-gap: 20vw;
   }
-
+  .social-div{
+    height: 10vh;
+    width: auto;
+  }
+  .social-logo {
+    height: 5vh;
+    width: 5vh;
+  }
+  .social-text {
+    width:70vw;
+  }
 
   .about-page {
     flex-flow: column nowrap;
@@ -1138,10 +1147,6 @@ Zde se mi o ní nechce rozepisovat, většina je self-explanatory.	*/
     height: 100%;
   }
 
-
-  .footer {
-    position:relative;
-  }
   .footer-text {
     position: absolute;
     margin: 0;

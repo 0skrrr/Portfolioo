@@ -90,7 +90,7 @@ function navbar(deviceRatio) {
         moveHighlightToElement(items[2], highlightTopLeft, highlightBottomRight);
         return;
       };
-      const currentSection = getCurrentSection(scrollSections);
+      const currentSection = currentScroll(scrollSections);
       if (currentSection.navItem) {
         moveHighlightToElement(currentSection.navItem, highlightTopLeft, highlightBottomRight);
       };
@@ -118,7 +118,7 @@ function navbar(deviceRatio) {
         } else {
           requestAnimationFrame( function () {
             scrollSections = getScrollSections(deviceRatio);
-            const currentSection = getCurrentSection(scrollSections);
+            const currentSection = currentScroll(scrollSections);
             const navItem = currentSection?.navItem;
             moveHighlightToElement(navItem, highlightTopLeft, highlightBottomRight);
           });
@@ -158,7 +158,7 @@ function navbar(deviceRatio) {
 
   // Původní pozice, při načtení stránky.
   window.addEventListener("load", function () {
-    const target = isGalleryPage ? items[2] : getCurrentSection(scrollSections).element;
+    const target = isGalleryPage ? items[2] : currentScroll(scrollSections).element;
     moveHighlightToElement(target, highlightTopLeft, highlightBottomRight);
     highlightTopLeft.style.opacity = "1";
     highlightBottomRight.style.opacity = "1";
@@ -232,22 +232,18 @@ function moveHighlightToElement(
   const offset = vhToPx(withPadding ? (offsetMap[closestMatch] ?? 3) : 0);
 
   // Vypočítání pozice a offsetu
-  // Pochopit + Fix
+  // Zjistíme, jak daleko je item od okraje 
   const leftPx = rect.left - containerRect.left - offset;
   const topPx = rect.top - containerRect.top - offset;
   const rightPx = containerRect.right - rect.right - offset;
   const bottomPx = containerRect.bottom - rect.bottom - offset;
 
-  // Zajištění, že nepůjdem do mínusu
-  const clamp = function (val) {
-    return Math.max(0, val);
-  };
 
   // Přiřazení pozicových údajů, a ještě jejich převedení, které vlastně není až tak essential
-  highlightTopLeft.style.left = `${pxToVw(clamp(leftPx))}vw`;
-  highlightTopLeft.style.top = `${pxToVh(clamp(topPx))}vh`;
-  highlightBottomRight.style.right = `${pxToVw(clamp(rightPx))}vw`;
-  highlightBottomRight.style.bottom = `${pxToVh(clamp(bottomPx))}vh`;
+  highlightTopLeft.style.left = `${pxToVw(leftPx)}vw`;
+  highlightTopLeft.style.top = `${pxToVh(topPx)}vh`;
+  highlightBottomRight.style.right = `${pxToVw(rightPx)}vw`;
+  highlightBottomRight.style.bottom = `${pxToVh(bottomPx)}vh`;
 }
 
 
@@ -293,8 +289,8 @@ function getScrollSections(deviceRatio) {
 
 
 // Funkce určující, v jaké sekci stránky se zrovna nacházíme, má jako parametr informace z předchozí funkce
-function getCurrentSection(scrollSections) {
-  console.log("getCurrentSection called");
+function currentScroll(scrollSections) {
+  console.log("currentScroll called");
 
   const scrollY = window.scrollY;
   let current = scrollSections[scrollSections.length - 1];
@@ -367,6 +363,7 @@ function scrollPosition() {
     window.addEventListener("load", function () {
       
       // Tohle porovná případné dosavadní cookie, které by nám mohlo říkat, kam scrollnout
+      
       const match = document.cookie.match(/(?:^|; )scrollY=([^;]+)/);
 
       if (match) {
@@ -421,7 +418,7 @@ function socialsExpand(deviceRatio, fromNavBar) {
     navBar.classList.add("expanded");
     socialsDiv.classList.remove("display-none");
     body.classList.add("overflow-hidden");
-    
+  
     document.querySelector(".hero-page").style.display = "none";
     document.querySelector(".about-page").style.display = "none";
     document.querySelector(".gallery-page").style.display = "none";
@@ -468,7 +465,7 @@ function socialsExpand(deviceRatio, fromNavBar) {
 
 
 // Funkce pro překlikávání obsahu About sekce, bere si jako parametry html strukturu pro content, plus string texty pro button
-function aboutTransform(config) {
+function about(config) {
   const {
     textElementIds,
     buttonElementId,
@@ -476,7 +473,7 @@ function aboutTransform(config) {
     rightNavId,
     texts,
     buttons,
-    transitionDuration = 100,
+    transitionDuration = 10,
   } = config;
 
   let index = 0;
@@ -638,7 +635,7 @@ function allFunctions() {
     console.warn("7");
 
     // Vložení variací kodu pro about page
-    aboutTransform({
+    about({
       textElementIds: [
         "about-text-a",
         "about-text-b"
