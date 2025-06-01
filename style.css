@@ -996,6 +996,7 @@ Zde se mi o ní nechce rozepisovat, většina je self-explanatory.	*/
     width: 40vw;
     height: 7vh;
   }
+  
   #about-nav-left:before,
   #about-nav-right:before {
     width: 5vh;
@@ -1010,7 +1011,7 @@ Zde se mi o ní nechce rozepisovat, většina je self-explanatory.	*/
     left: 1vw;
   }
   .about-text-wrapper {
-    height: 70vh;
+    height: 100vh;
     width: 70vw;
   }
   .about-image-a {
@@ -1021,6 +1022,9 @@ Zde se mi o ní nechce rozepisovat, většina je self-explanatory.	*/
     height: 100%;
     width: 100%;
     align-items: flex-start;
+  }
+  .about-text-a {
+    width:70vw;
   }
 
 

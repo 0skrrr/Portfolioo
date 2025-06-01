@@ -645,10 +645,10 @@ function allFunctions() {
 
       // Tady taky musí v tom alt být single qutoes... proč, to nevím, ale nezajímá mě to natolik, abych si o tom něco zjistil
       texts: [
-        "<div class=about-text-a>Oskrrr - Just a guy</div><img class=about-image-a alt='If there isn&#39;t my photo, use your imagination' src=images/about/about_me.JPG>",
+        "<div class=about-text-a>Oskrrr - Thats mee. Im 16 years old guy living in Czech Republic.</div><img class=about-image-a alt='If there isn&#39;t my photo, use your imagination' src=images/about/about_me.JPG>",
         "<div class=about-text-a>I haven´t yet developed some work identity. You can be the one who will give me an opportunity to change that</div>",
-        "Hobbies",
-        "School"
+        "I like to do a lot of stuff. Gaming, music, FPV drone flying, movies (Christopher Nolan is the best), coding, hiking, camping, and so much more.",
+        "<div class=about-text-a>I am a student at CreativeHillCollege, studying development. Choosing to go to this school was (still is) one of the best decisions of my life. Yes, some things we learn are very, like very boring. But big majority is actually pretty fun.</div><img class=about-image-a alt='If there isn&#39;t my photo, use your imagination' src=images/about/chc.png>"
       ],
       buttons: [
         "Me",
