@@ -271,7 +271,7 @@ function getScrollSections(deviceRatio) {
     "1:1": 100,
     "3:5": 1600,     
     "2:3": 1800,     
-    "9:16": 1600,     
+    "9:16": 1000,     
   };
 
   const offset = offsetMap[deviceRatio] ?? 90;
