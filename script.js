@@ -229,6 +229,7 @@ function moveHighlightToElement(
     "9:16": 2,    
   };
 
+  // Tohle zajistí oddálení highlights od položky nav-baru, pokud tu položku hoverujeme
   const offset = vhToPx(withPadding ? (offsetMap[closestMatch] ?? 3) : 0);
 
   // Vypočítání pozice a offsetu
@@ -296,7 +297,6 @@ function currentScroll(scrollSections) {
   let current = scrollSections[scrollSections.length - 1];
 
   // Výpočet
-  // Pochopit + Fix
   for (let i = 0; i < scrollSections.length; i++) {
     if (scrollY < scrollSections[i].top) {
       current = scrollSections[Math.max(i - 1, 0)];
@@ -364,10 +364,9 @@ function scrollPosition() {
       
       // Tohle porovná případné dosavadní cookie, které by nám mohlo říkat, kam scrollnout
       
-      const match = document.cookie.match(/(?:^|; )scrollY=([^;]+)/);
-
+      const match = document.cookie.split('scrollY=')[1]?.split(';')[0];
       if (match) {
-        const scrollY = parseInt(match[1], 10);
+        const scrollY = parseInt(match);
         if (!isNaN(scrollY)) window.scrollTo(0, scrollY);
       }
     });
@@ -381,7 +380,7 @@ function scrollPosition() {
     document.addEventListener("scroll", function () {
       const scrollY = window.scrollY;
       document.cookie = `scrollY=${scrollY}`;
-      console.log("Scroll position saved:", scrollY);
+      console.log("ScrollY:", scrollY);
     });
   }
 }
@@ -550,7 +549,7 @@ function about(config) {
 // Funkce pro automatické zasílání emailu, obsahuje speciální příkazy
 // Jeden mě, jeden tomu, kdo to poslal
 function emailSend () {
-  function theAct () {
+  function Send () {
     const email = document.getElementById("emaill").value;
     const message = document.getElementById("contact-message").value;
     emailjs.send("8267628902994824", "template_q8zp78o", {
@@ -564,7 +563,7 @@ function emailSend () {
   }
   emailjs.init("Aq25gB-YP1glON6CK");
   document.querySelectorAll(".send-button").forEach(function (button) {
-    button.addEventListener("click", theAct);
+    button.addEventListener("click", Send);
   });
 }
 
@@ -627,12 +626,12 @@ function allFunctions() {
   console.warn("5");
   scrollPosition();
   console.warn("6");
-  socialsExpand(deviceType,0);
-  console.warn("6.1");
 
   // Spuštění funkcí, které mají použití jenom na hlavní stránce
   if (currentPage === "" || currentPage === "index.html") {
     console.warn("7");
+    socialsExpand(deviceType,0);
+    console.warn("7.05");
 
     // Vložení variací kodu pro about page
     about({
