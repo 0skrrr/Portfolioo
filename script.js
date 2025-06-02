@@ -548,7 +548,7 @@ function about(config) {
 
 // Funkce pro automatické zasílání emailu, obsahuje speciální příkazy
 // Jeden mě, jeden tomu, kdo to poslal
-function emailSednd () {
+function emailSend (emailCookie) {
   function Send () {
     const email = document.getElementById("emaill").value;
     const message = document.getElementById("contact-message").value;
@@ -560,6 +560,8 @@ function emailSednd () {
       email:email,
       message:message
     });
+    emailCookie++;
+    document.cookie = "Email=" + emailCookie;
   }
   emailjs.init("Aq25gB-YP1glON6CK");
   document.querySelectorAll(".send-button").forEach(function (button) {
@@ -659,7 +661,17 @@ function allFunctions() {
       ]
     });
     console.warn("7.1");
-    emailSend();
+    var emailCookie = document.cookie.split("Email=")[1]?.split(";")[0];
+    console.warn("7.1");
+    console.error("Email cookie value: " + emailCookie);
+    if (emailCookie === undefined) {
+      console.error("Email cookie not found, setting to 0");
+      emailCookie = 0;
+    }
+    if (emailCookie < 2) {
+      emailSend(emailCookie);
+      console.error("Email cookie set to: " + emailCookie);
+    }
     if (deviceType.closestMatch === "16:9" || deviceType.closestMatch === "19.5:9") {
       console.warn("7.1.1");
       emailLineExpand();
