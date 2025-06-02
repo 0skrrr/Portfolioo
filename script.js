@@ -661,6 +661,8 @@ function allFunctions() {
       ]
     });
     console.warn("7.1");
+
+    // Vytvořeno v den odevzdání, protože mě spolužáci zaspamovali sedm seti e-maily.
     var emailCookie = document.cookie.split("Email=")[1]?.split(";")[0];
     console.warn("7.1");
     console.error("Email cookie value: " + emailCookie);
@@ -672,6 +674,8 @@ function allFunctions() {
       emailSend(emailCookie);
       console.error("Email cookie set to: " + emailCookie);
     }
+
+
     if (deviceType.closestMatch === "16:9" || deviceType.closestMatch === "19.5:9") {
       console.warn("7.1.1");
       emailLineExpand();
