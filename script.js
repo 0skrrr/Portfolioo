@@ -548,7 +548,7 @@ function about(config) {
 
 // Funkce pro automatické zasílání emailu, obsahuje speciální příkazy
 // Jeden mě, jeden tomu, kdo to poslal
-function emailSend () {
+function emailSednd () {
   function Send () {
     const email = document.getElementById("emaill").value;
     const message = document.getElementById("contact-message").value;
