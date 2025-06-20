@@ -241,10 +241,10 @@ function moveHighlightToElement(
 
 
   // Přiřazení pozicových údajů, a ještě jejich převedení, které vlastně není až tak essential
-  highlightTopLeft.style.left = `${pxToVw(leftPx)}vw`;
-  highlightTopLeft.style.top = `${pxToVh(topPx)}vh`;
-  highlightBottomRight.style.right = `${pxToVw(rightPx)}vw`;
-  highlightBottomRight.style.bottom = `${pxToVh(bottomPx)}vh`;
+  highlightTopLeft.style.left = pxToVw(leftPx) + "vw";
+  highlightTopLeft.style.top = pxToVh(topPx) + "vh";
+  highlightBottomRight.style.right = pxToVw(rightPx) + "vw";
+  highlightBottomRight.style.bottom = pxToVh(bottomPx) + "vh";
 }
 
 
@@ -364,7 +364,7 @@ function scrollPosition() {
       
       // Tohle porovná případné dosavadní cookie, které by nám mohlo říkat, kam scrollnout
       
-      const match = document.cookie.split('scrollY=')[1]?.split(';')[0];
+      const match = document.cookie.split("scrollY=")[1]?.split(";")[0];
       if (match) {
         const scrollY = parseInt(match);
         if (!isNaN(scrollY)) window.scrollTo(0, scrollY);
@@ -374,12 +374,12 @@ function scrollPosition() {
     // Uložení scroll hodnoty do cookie, buď při scrollování, nebo těsně před opuštěním stránky
     window.addEventListener("beforeunload", function () {
       const scrollY = window.scrollY;
-      document.cookie = `scrollY=${scrollY}`;
+      document.cookie = "scrollY=" + scrollY;
     });
     
     document.addEventListener("scroll", function () {
       const scrollY = window.scrollY;
-      document.cookie = `scrollY=${scrollY}`;
+      document.cookie = "scrollY=" + scrollY;
       console.log("ScrollY:", scrollY);
     });
   }
@@ -658,8 +658,14 @@ function allFunctions() {
         "My School"
       ]
     });
+    const emailCookie = document.cookie.split("Email=")[1]?.split(";")[0];
     console.warn("7.1");
-    emailSend();
+    console.error("Email cookie value: " + emailCookie);
+    if (emailCookie < 3) {
+      emailSend();
+      document.cookie = "Email=" + scrollY;
+      console.error("Email cookie set to: " + emailCookie);
+    }
     if (deviceType.closestMatch === "16:9" || deviceType.closestMatch === "19.5:9") {
       console.warn("7.1.1");
       emailLineExpand();
