@@ -688,8 +688,52 @@ function allFunctions() {
   console.warn("10");
 };
 
+// Funkce pro inicializaci popup disclaimeru
+function initializePopup() {
+  const popup = document.getElementById("disclaimer-popup");
+  const overlay = document.getElementById("popup-overlay");
+  const closeBtn = document.getElementById("popup-close-btn");
+  const actionBtn = document.getElementById("popup-action-btn");
+
+  // Funkce pro zavření popupu
+  function closePopup() {
+    popup.classList.remove("active");
+    overlay.classList.remove("active");
+    // Uloží do localStorage, aby se popup nezobrazil znovu (volitelně)
+    localStorage.setItem("popupDismissed", "true");
+  }
+
+  // Funkce pro otevření popupu
+  function openPopup() {
+    popup.classList.add("active");
+    overlay.classList.add("active");
+  }
+
+  // Přidá event listenery
+  closeBtn.addEventListener("click", closePopup);
+  actionBtn.addEventListener("click", closePopup);
+  overlay.addEventListener("click", closePopup);
+
+  // Zabránění zavření popupu při kliknutí na obsah popupu
+  popup.addEventListener("click", function(e) {
+    e.stopPropagation();
+  });
+
+  // Otevře popup při načtení stránky, pokud nebyl již dismissnut
+  const popupDismissed = localStorage.getItem("popupDismissed");
+  if (!popupDismissed) {
+    // Menší delay pro lepší UX
+    setTimeout(function() {
+      openPopup();
+    }, 500);
+  }
+
+  console.log("Popup initialized");
+}
+
 // Po načtení stránky se spustí všechno
 document.addEventListener("DOMContentLoaded", function () {
   console.warn("Onload spouštěč");
+  initializePopup();
   allFunctions();
 });

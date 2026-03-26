@@ -807,8 +807,228 @@ Přes JS poté offset resetuju, takže se ta čára při psaní "prodlouží"*/
   stroke-width: 0.6vw;
 }
 
+/* Popup overlay styling */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 999;
+}
 
+.popup-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
 
+/* Disclaimer popup styling */
+.disclaimer-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  width: 90vw;
+  max-width: 600px;
+  background: var(--color-background);
+  border: 2px solid var(--color-on-background);
+  padding: 2vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2vh;
+}
+
+.disclaimer-popup.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Close button styling */
+.popup-close-btn {
+  position: absolute;
+  top: 2vh;
+  right: 2vh;
+  background: none;
+  border: none;
+  color: var(--color-on-background);
+  font-size: 2.5vh;
+  cursor: pointer;
+  width: 4vh;
+  height: 4vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, color 0.2s ease;
+  padding: 0;
+}
+
+.popup-close-btn:hover {
+  transform: rotate(90deg) scale(1.2);
+  color: var(--color-primary);
+}
+
+/* Popup content wrapper */
+.popup-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2vh;
+  margin-bottom: 2vh;
+}
+
+/* Image wrapper */
+.popup-image-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2vh;
+  width: 100%;
+}
+
+.popup-image {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  object-fit: contain;
+  border: none;
+  padding: 0;
+}
+
+/* Text styling */
+.popup-title {
+  font-family: title;
+  color: var(--color-on-background);
+  font-size: 4vh;
+  margin: 0;
+  text-align: center;
+}
+
+.popup-message {
+  font-family: normal;
+  color: var(--color-on-background);
+  font-size: 1.8vh;
+  line-height: 1.5;
+  text-align: center;
+  margin: 1vh 0;
+}
+
+.popup-message strong {
+  color: var(--color-primary);
+  font-weight: bold;
+}
+
+.popup-subtitle {
+  font-family: normal;
+  color: var(--color-on-background);
+  font-size: 1.6vh;
+  text-align: center;
+  margin: 1vh 0 0 0;
+  opacity: 0.9;
+  font-style: italic;
+}
+
+/* Action button styling */
+.popup-action-btn {
+  width: 100%;
+  padding: 1.5vh 2vh;
+  background: var(--color-on-background);
+  color: var(--color-background);
+  border: none;
+  border-radius: 0;
+  font-family: title;
+  font-size: 2vh;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: bold;
+}
+
+.popup-action-btn:hover {
+  background: var(--color-primary);
+  color: var(--color-background);
+  transform: scale(1.02);
+}
+
+.popup-action-btn:active {
+  transform: scale(0.98);
+}
+
+/* Mobile responsiveness for popup */
+@media only screen and (max-aspect-ratio: 9/16) {
+  .disclaimer-popup {
+    width: 98vw;
+    max-width: none;
+    padding: 1.5vh;
+    max-height: 95vh;
+  }
+
+  .popup-image {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .popup-title {
+    font-size: 3.5vh;
+  }
+
+  .popup-message {
+    font-size: 1.6vh;
+  }
+
+  .popup-subtitle {
+    font-size: 1.4vh;
+  }
+
+  .popup-action-btn {
+    padding: 1.2vh 1.5vh;
+    font-size: 1.8vh;
+    max-width: 100%;
+  }
+
+  .popup-close-btn {
+    font-size: 2.2vh;
+  }
+}
+
+@media only screen and (max-aspect-ratio: 3/5) {
+  .disclaimer-popup {
+    width: 98vw;
+    max-height: 95vh;
+  }
+
+  .popup-image {
+    width: 100%;
+  }
+
+  .popup-title {
+    font-size: 3.2vh;
+  }
+
+  .popup-message {
+    font-size: 1.5vh;
+  }
+}
+
+@media only screen and (min-height: 1200px) {
+  .disclaimer-popup {
+    max-width: 1100px;
+  }
+
+  .popup-image {
+    max-width: 1000px;
+  }
+}
 
 /* Všechny použité animace, pěkně na jednom místě */
 
@@ -1336,23 +1556,20 @@ Zde se mi o ní nechce rozepisovat, většina je self-explanatory.	*/
   .footer-text-1 {
     top:40%;
     left:5%;
-    rotate:-10deg;
+    rotate:-27deg;
   }
   .footer-text-2 {
     top:50%;
     left:30%;
-    rotate:-10deg;
+    rotate:-27deg;
   }
   .footer-button {
     position: absolute;
     right:0;
     top:50%;
-    width: 15vw;
-    rotate: -10deg;
+    width: 30vw;
+    rotate: -27deg;
   }
-  .socials-div {
-  justify-content:center;
-}
 }
 
 @media only screen and (min-aspect-ratio: 4/3)  and (max-aspect-ratio: 5/3){
